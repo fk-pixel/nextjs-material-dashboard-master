@@ -20,7 +20,15 @@ import styles from "assets/jss/nextjs-material-dashboard/components/tasksStyle.j
 export default function Tasks(props) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
-  const [checked, setChecked] = React.useState([...props.checkedIndexes]);
+  const [checked, setChecked] = React.useState(
+    props.checkedIndexes !== undefined ? [...props.checkedIndexes] : []
+  );
+
+  const { tasksIndexes, tasks, rtlActive } = props;
+  const tableCellClasses = classnames(classes.tableCell, {
+    [classes.tableCellRTL]: rtlActive,
+  });
+
   const handleToggle = (value) => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
@@ -31,10 +39,21 @@ export default function Tasks(props) {
     }
     setChecked(newChecked);
   };
-  const { tasksIndexes, tasks, rtlActive } = props;
-  const tableCellClasses = classnames(classes.tableCell, {
-    [classes.tableCellRTL]: rtlActive,
-  });
+
+  // const handleToggle = React.useMemo(
+  //   (value) => {
+  //     const currentIndex = checked.indexOf(value);
+  //     const newChecked = [...checked];
+  //     if (currentIndex === -1) {
+  //       newChecked.push(value);
+  //     } else {
+  //       newChecked.splice(currentIndex, 1);
+  //     }
+  //     setChecked(newChecked);
+  //   },
+  //   [checked]
+  // );
+
   return (
     <Table className={classes.table}>
       <TableBody>

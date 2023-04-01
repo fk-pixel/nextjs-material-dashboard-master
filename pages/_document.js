@@ -1,11 +1,13 @@
 import React from "react";
-import Document, { Head, Main, NextScript } from "next/document";
+import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheets } from "@material-ui/styles";
+import theme from "../layouts/theme";
+// import createEmotionCache from "../layouts/createEmotionCache";
 
 class MyDocument extends Document {
   render() {
     return (
-      <html lang="en">
+      <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
           <meta name="theme-color" content="#000000" />
@@ -31,15 +33,29 @@ class MyDocument extends Document {
           />
           <link
             rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          />
+
+          <link
+            rel="stylesheet"
             href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
           />
+          {/* PWA primary color */}
+          <meta name="theme-color" content={theme.palette.primary.main} />
+          <link rel="shortcut icon" href="/static/favicon.ico" />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          />
+          {/* Inject MUI styles first to match with the prepend: true configuration. */}
+          {this.props.emotionStyleTags}
         </Head>
         <body>
           <div id="page-transition"></div>
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }

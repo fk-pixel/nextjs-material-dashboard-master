@@ -20,6 +20,8 @@ import ReactDOM from "react-dom";
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
+// import { ThemeProvider } from "@mui/material/styles";
+// import theme from "../layouts/theme";
 
 import PageChange from "components/PageChange/PageChange.js";
 
@@ -44,6 +46,14 @@ Router.events.on("routeChangeError", () => {
 
 export default class MyApp extends App {
   componentDidMount() {
+    // React.useEffect(() => {
+    //   // Remove the server-side injected CSS.
+    //   const jssStyles = document.querySelector("#jss-server-side");
+    //   if (jssStyles) {
+    //     jssStyles.parentElement.removeChild(jssStyles);
+    //   }
+    // }, []);
+
     let comment = document.createComment(`
 
 =========================================================
@@ -72,6 +82,7 @@ export default class MyApp extends App {
 
     return { pageProps };
   }
+
   render() {
     const { Component, pageProps } = this.props;
 
@@ -87,9 +98,12 @@ export default class MyApp extends App {
           <title>NextJS Material Dashboard by Creative Tim</title>
           <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
         </Head>
+        {/* <ThemeProvider theme={theme}> */}
+        {/* <CssBaseline /> */}
         <Layout>
           <Component {...pageProps} />
         </Layout>
+        {/* </ThemeProvider> */}
       </React.Fragment>
     );
   }

@@ -22,6 +22,7 @@ import Admin from "layouts/Admin.js";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Table from "components/Table/Table.js";
+import DataTable from "components/DataTable/DataTable.js";
 import Tasks from "components/Tasks/Tasks.js";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
 import Danger from "components/Typography/Danger.js";
@@ -53,7 +54,7 @@ function Dashboard() {
               <CardIcon color="warning">
                 <Icon>content_copy</Icon>
               </CardIcon>
-              <p className={classes.cardCategory}>Used Space</p>
+              <p className={classes.cardCategory}>Aylik Satis Adedi</p>
               <h3 className={classes.cardTitle}>
                 49/50 <small>GB</small>
               </h3>
@@ -76,7 +77,7 @@ function Dashboard() {
               <CardIcon color="dark">
                 <Store />
               </CardIcon>
-              <p className={classes.cardCategory}>Revenue</p>
+              <p className={classes.cardCategory}>Aylik Kazanc</p>
               <h3 className={classes.cardTitle}>$34,245</h3>
             </CardHeader>
             <CardFooter stats>
@@ -93,8 +94,8 @@ function Dashboard() {
               <CardIcon color="danger">
                 <Icon>info_outline</Icon>
               </CardIcon>
-              <p className={classes.cardCategory}>Fixed Issues</p>
-              <h3 className={classes.cardTitle}>75</h3>
+              <p className={classes.cardCategory}>Son Siparis Bilgisi</p>
+              <h3 className={classes.cardTitle}>Ürün: </h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -122,7 +123,7 @@ function Dashboard() {
           </Card>
         </GridItem>
       </GridContainer>
-      <GridContainer>
+      {/* <GridContainer>
         <GridItem xs={12} sm={12} md={4}>
           <Card chart>
             <CardHeader color="success">
@@ -195,19 +196,24 @@ function Dashboard() {
             </CardFooter>
           </Card>
         </GridItem>
+      </GridContainer> */}
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={12}>
+          <DataTable />
+        </GridItem>
       </GridContainer>
       <GridContainer>
         <GridItem xs={12} sm={12} md={6}>
           <CustomTabs
             title="Tasks:"
-            headerColor="error"
+            headerColor="danger"
             tabs={[
               {
                 tabName: "Bugs",
                 tabIcon: BugReport,
                 tabContent: (
                   <Tasks
-                    checkedIndexes={[0, 3]}
+                    // checkedIndexes={[0, 3]}
                     tasksIndexes={[0, 1, 2, 3]}
                     tasks={bugs}
                   />
@@ -218,7 +224,7 @@ function Dashboard() {
                 tabIcon: Code,
                 tabContent: (
                   <Tasks
-                    checkedIndexes={[0]}
+                    // checkedIndexes={[0]}
                     tasksIndexes={[0, 1]}
                     tasks={website}
                   />
@@ -229,7 +235,7 @@ function Dashboard() {
                 tabIcon: Cloud,
                 tabContent: (
                   <Tasks
-                    checkedIndexes={[1]}
+                    // checkedIndexes={[1]}
                     tasksIndexes={[0, 1, 2]}
                     tasks={server}
                   />
@@ -240,7 +246,7 @@ function Dashboard() {
         </GridItem>
         <GridItem xs={12} sm={12} md={6}>
           <Card>
-            <CardHeader color="warning">
+            <CardHeader color="info">
               <h4 className={classes.cardTitleWhite}>Employees Stats</h4>
               <p className={classes.cardCategoryWhite}>
                 New employees on 15th September, 2016
@@ -248,7 +254,7 @@ function Dashboard() {
             </CardHeader>
             <CardBody>
               <Table
-                tableHeaderColor="danger"
+                tableHeaderColor="gray"
                 tableHead={["ID", "Name", "Salary", "Country"]}
                 tableData={[
                   ["1", "Dakota Rice", "$36,738", "Niger"],
