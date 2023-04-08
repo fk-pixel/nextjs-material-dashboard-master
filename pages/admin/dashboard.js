@@ -202,7 +202,9 @@ function Dashboard() {
           <DataTable />
         </GridItem>
       </GridContainer>
-      <GridContainer>
+
+      {/* Alt Kart Blogu */}
+      {/* <GridContainer>
         <GridItem xs={12} sm={12} md={6}>
           <CustomTabs
             title="Tasks:"
@@ -266,7 +268,7 @@ function Dashboard() {
             </CardBody>
           </Card>
         </GridItem>
-      </GridContainer>
+      </GridContainer> */}
     </div>
   );
 }

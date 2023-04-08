@@ -1,10 +1,12 @@
 import * as React from "react";
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
-import { Button, Box } from "@mui/material";
+import { Button, Box, Tooltip, Avatar } from "@mui/material";
 import FileUpload from "@mui/icons-material/FileUpload";
 import Save from "@mui/icons-material/Save";
 import Add from "@mui/icons-material/Add";
 import Delete from "@mui/icons-material/Delete";
+import AutocompleteEditCell from "../../components/AutocompleteEditCell/AutocompleteEditCell.js";
+import moment from "moment";
 
 import {
   randomAddress,
@@ -13,6 +15,7 @@ import {
   randomQuantity,
   randomTraderName,
   randomUpdatedDate,
+  randomUserName,
 } from "@mui/x-data-grid-generator";
 
 let idCounter = 1;
@@ -22,14 +25,19 @@ const createRandomRow = () => {
 };
 
 export default function BasicEditingGrid() {
+  const { traderName, shortcut } = getShortcut();
+
   const data = [
     {
       id: 1,
-      title: randomTraderName(),
+      title: traderName,
       price: 25,
       quantity: randomQuantity(),
-      date: randomCreatedDate(),
+      saleDate: randomCreatedDate(), //moment(randomCreatedDate(), "YYYY-MM-DD"),
       gift: randomAddress(),
+      avatar: shortcut,
+      status: "🟡 Beklemede",
+      createdDate: new Date(),
     },
   ];
 
@@ -40,8 +48,8 @@ export default function BasicEditingGrid() {
   };
 
   return (
-    <div style={{ height: 500, width: "100%" }}>
-      <Box height={500}>
+    <div style={{ height: 850, width: "100%" }}>
+      <Box height={850}>
         <Button
           onClick={() => handleAddRow()}
           variant="text"
@@ -65,7 +73,7 @@ const onUpload = (e, row) => {
   e.stopPropagation();
   //do whatever you want with the row
   alert(
-    `ürün kimligi: ${row.id} ve ürün bilgisi: ${row.title}, ${row.price} olan yeni bir icerik yükleyiniz.`
+    `Ürün kimligi: ${row.id} ve ürün bilgisi: ${row.title}, ${row.price} olan yeni bir icerik yükleyiniz.`
   );
 };
 
@@ -75,28 +83,112 @@ const onSave = (e, row) => {
   console.log(row);
 };
 
+function getShortcut() {
+  const traderName = randomTraderName();
+  const firstLetter = traderName?.split(" ")[0][0];
+  const secondLetter = traderName?.split(" ")[1][0];
+  const shortcut = firstLetter + secondLetter;
+
+  return { traderName, shortcut };
+}
+
+const STATUS_OPTIONS = [
+  { id: "rejected", label: "🔴 Reddedildi" },
+  { id: "inProgress", label: "🟡 Beklemede" },
+  { id: "completed", label: "🟢 Gönderildi" },
+];
+
 const columns = [
-  { field: "id", headerName: "No", width: 180, editable: false }, // data.fetchShopID.shop_id
+  { field: "id", headerName: "No", width: 50, editable: false }, // data.fetchShopID.shop_id
+  {
+    field: "avatar",
+    headerName: "",
+    width: 80,
+    renderCell: (params) => {
+      return (
+        <Tooltip title={"Magaza"}>
+          <Avatar sx={{ bgcolor: "warning.main" }} alt="Remy Sharp">
+            {params.value}
+          </Avatar>
+        </Tooltip>
+      );
+    },
+  },
   { field: "title", headerName: "Ürün", width: 300, editable: true }, // data.fetchShopID.shop_id
   { field: "price", headerName: "Fiyat", type: "number", editable: true }, // data.fetchShopID.shop_id
   { field: "quantity", headerName: "Adet", type: "number", editable: true },
-  { field: "date", headerName: "Tarih", type: "date", editable: true },
+  {
+    field: "saleDate",
+    headerName: "Satis Tarihi",
+    type: "date",
+    editable: true,
+  },
   { field: "gift", headerName: "Hediye Ürün", width: 300, editable: true },
-
+  {
+    field: "giftPrice",
+    headerName: "Hediye Ürün Fiyat",
+    type: "number",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "giftQuantity",
+    headerName: "Hediye Ürün Adet",
+    type: "number",
+    width: 180,
+    editable: true,
+  },
+  {
+    field: "status",
+    headerName: "Statü",
+    width: 180,
+    editable: true,
+    // cellEditorParams: {
+    //   do: "fthbtl",
+    // },
+    renderEditCell: (params) => {
+      return (
+        <AutocompleteEditCell
+          {...params}
+          value={params.row.status}
+          options={STATUS_OPTIONS}
+          getOptionLabel={(o) => o.label || ""}
+          freeSolo={true}
+          autoHighlight={false}
+          multiple={false}
+          disableClearable={true}
+        />
+      );
+    },
+  },
+  {
+    field: "totalPrice",
+    headerName: "Toplam Fiyat",
+    type: "number",
+    editable: true,
+  },
+  {
+    field: "createdDate",
+    headerName: "Kayit Tarihi",
+    type: "date",
+    editable: false,
+  },
   {
     field: "upload",
     headerName: "",
     width: 80,
     renderCell: (params) => {
       return (
-        <Button
-          onClick={(e) => onUpload(e, params.row)}
-          variant="contained"
-          color="primary"
-          size="small"
-        >
-          <FileUpload fontSize="small" />
-        </Button>
+        <Tooltip title={"Belge ekle"}>
+          <Button
+            onClick={(e) => onUpload(e, params.row)}
+            variant="contained"
+            color="primary"
+            size="small"
+          >
+            <FileUpload fontSize="small" />
+          </Button>
+        </Tooltip>
       );
     },
   },
@@ -106,14 +198,16 @@ const columns = [
     width: 80,
     renderCell: (params) => {
       return (
-        <Button
-          onClick={(e) => onSave(e, params.row)}
-          variant="contained"
-          color="primary"
-          size="small"
-        >
-          <Save fontSize="small" />
-        </Button>
+        <Tooltip title={"Siparisi kaydet"}>
+          <Button
+            onClick={(e) => onSave(e, params.row)}
+            variant="contained"
+            color="primary"
+            size="small"
+          >
+            <Save fontSize="small" />
+          </Button>
+        </Tooltip>
       );
     },
   },
@@ -123,14 +217,16 @@ const columns = [
     width: 80,
     renderCell: (params) => {
       return (
-        <Button
-          onClick={(e) => onRemove(e, params.row)}
-          variant="contained"
-          color="secondary"
-          size="small"
-        >
-          <Delete fontSize="small" />
-        </Button>
+        <Tooltip title={"Siparisi sil"}>
+          <Button
+            onClick={(e) => onRemove(e, params.row)}
+            variant="contained"
+            color="secondary"
+            size="small"
+          >
+            <Delete fontSize="small" />
+          </Button>
+        </Tooltip>
       );
     },
   },

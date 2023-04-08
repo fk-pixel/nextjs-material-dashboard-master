@@ -250,7 +250,7 @@ footer ul li a:hover {
   z-index: 1031;
   border-radius: 8px 0 0 8px;
   text-align: center;
-  top: 120px;
+  top: 1000px;
   .badge-primary-background-color: #9c27b0;
 }
 
@@ -541,7 +541,7 @@ footer ul li a:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  content: '';
+  content: "";
   display: block;
   z-index: 9999;
   position: absolute;

@@ -17,6 +17,7 @@ import AdminNavbarLinks from "components/Navbars/AdminNavbarLinks.js";
 import RTLNavbarLinks from "components/Navbars/RTLNavbarLinks.js";
 
 import styles from "assets/jss/nextjs-material-dashboard/components/sidebarStyle.js";
+import { Tooltip } from "@mui/material";
 
 export default function Sidebar(props) {
   // used for checking current route
@@ -85,14 +86,16 @@ export default function Sidebar(props) {
   var brand = (
     <div className={classes.logo}>
       <a
-        href="https://www.creative-tim.com?ref=njsmd-sidebar"
+        href=""
         className={classNames(classes.logoLink, {
           [classes.logoLinkRTL]: props.rtlActive,
         })}
         target="_blank"
       >
         <div className={classes.logoImage}>
-          <img src={logo} alt="logo" className={classes.img} />
+          <Tooltip title={"Yeni sekmede ac"}>
+            <img src={logo} alt="logo" className={classes.img} />
+          </Tooltip>
         </div>
         {logoText}
       </a>

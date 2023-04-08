@@ -16,6 +16,9 @@
 
 */
 // @material-ui/icons
+import LoginIcon from "@mui/icons-material/Login";
+import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
+
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
@@ -36,68 +39,96 @@ const dashboardRoutes = [
   },
   {
     path: "/user-profile",
-    name: "User Profile",
+    name: "Kullanici Profili",
     rtlName: "ملف تعريفي للمستخدم",
     icon: Person,
 
     layout: "/admin",
   },
   {
-    path: "/table-list",
-    name: "Table List",
-    rtlName: "قائمة الجدول",
-    icon: "content_paste",
+    path: "/table",
+    name: "Aylik Tablo",
+    rtlName: "ملف تعريفي للمستخدم",
+    icon: Person,
 
     layout: "/admin",
   },
-  {
-    path: "/typography",
-    name: "Typography",
-    rtlName: "طباعة",
-    icon: LibraryBooks,
 
-    layout: "/admin",
-  },
-  {
-    path: "/icons",
-    name: "Icons",
-    rtlName: "الرموز",
-    icon: BubbleChart,
+  // {
+  //   path: "/table-list",
+  //   name: "Table List",
+  //   rtlName: "قائمة الجدول",
+  //   icon: "content_paste",
 
-    layout: "/admin",
-  },
-  {
-    path: "/maps",
-    name: "Maps",
-    rtlName: "خرائط",
-    icon: LocationOn,
+  //   layout: "/admin",
+  // },
+  // {
+  //   path: "/typography",
+  //   name: "Typography",
+  //   rtlName: "طباعة",
+  //   icon: LibraryBooks,
 
-    layout: "/admin",
-  },
-  {
-    path: "/notifications",
-    name: "Notifications",
-    rtlName: "إخطارات",
-    icon: Notifications,
+  //   layout: "/admin",
+  // },
+  // {
+  //   path: "/icons",
+  //   name: "Icons",
+  //   rtlName: "الرموز",
+  //   icon: BubbleChart,
 
-    layout: "/admin",
-  },
-  {
-    path: "/rtl-page",
-    name: "RTL Support",
-    rtlName: "پشتیبانی از راست به چپ",
-    icon: Language,
+  //   layout: "/admin",
+  // },
+  // {
+  //   path: "/maps",
+  //   name: "Maps",
+  //   rtlName: "خرائط",
+  //   icon: LocationOn,
 
-    layout: "/rtl",
-  },
-  {
-    path: "/upgrade-to-pro",
-    name: "Upgrade To PRO",
-    rtlName: "التطور للاحترافية",
-    icon: Unarchive,
+  //   layout: "/admin",
+  // },
+  // {
+  //   path: "/notifications",
+  //   name: "Notifications",
+  //   rtlName: "إخطارات",
+  //   icon: Notifications,
 
-    layout: "/admin",
-  },
+  //   layout: "/admin",
+  // },
+  // {
+  //   path: "/rtl-page",
+  //   name: "RTL Support",
+  //   rtlName: "پشتیبانی از راست به چپ",
+  //   icon: Language,
+
+  //   layout: "/rtl",
+  // },
+  // {
+  //   path: "/upgrade-to-pro",
+  //   name: "Upgrade To PRO",
+  //   rtlName: "التطور للاحترافية",
+  //   icon: Unarchive,
+
+  //   layout: "/admin",
+  // },
 ];
 
 export default dashboardRoutes;
+
+export const authRoutes = [
+  {
+    path: "/login",
+    name: "Login",
+    rtlName: "ل",
+    icon: LoginIcon,
+
+    layout: "/auth",
+  },
+  {
+    path: "/register",
+    name: "Register",
+    rtlName: "ة",
+    icon: AppRegistrationIcon,
+
+    layout: "/auth",
+  },
+];
