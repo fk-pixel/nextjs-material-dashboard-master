@@ -23,8 +23,9 @@ export default function Header(props) {
   // create styles for this component
   const useStyles = makeStyles(styles);
   const classes = useStyles();
+
   function makeBrand() {
-    var name = "NextJS Material Dashboard";
+    var name = "Dashboard";
     props.routes.map((prop) => {
       if (router.route.indexOf(prop.layout + prop.path) !== -1) {
         name = props.rtlActive ? prop.rtlName : prop.name;
@@ -33,6 +34,20 @@ export default function Header(props) {
     });
     return name;
   }
+
+  const [isDashboard, setIsDashboard] = React.useState(false);
+  const [brand, setBrand] = React.useState();
+
+  React.useEffect(() => {
+    if (makeBrand() === "Dashboard") {
+      setIsDashboard(true);
+      setBrand("Dashboard");
+    } else {
+      setBrand(makeBrand());
+      setIsDashboard(false);
+    }
+  }, [router.route]);
+
   const { color } = props;
   const appBarClasses = classNames({
     [" " + classes[color]]: color,
@@ -47,7 +62,11 @@ export default function Header(props) {
           </Button>
         </div>
         <Hidden smDown implementation="css">
-          {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}
+          {props.rtlActive ? (
+            <RTLNavbarLinks />
+          ) : (
+            <AdminNavbarLinks isDashboard={isDashboard} />
+          )}
         </Hidden>
         <Hidden mdUp implementation="css">
           <IconButton

@@ -13,7 +13,7 @@ import Divider from "@material-ui/core/Divider";
 // @material-ui/icons
 import Person from "@material-ui/icons/Person";
 import Notifications from "@material-ui/icons/Notifications";
-import Dashboard from "@material-ui/icons/Dashboard";
+import DateRange from "@material-ui/icons/DateRange";
 import Search from "@material-ui/icons/Search";
 // core components
 import CustomInput from "components/CustomInput/CustomInput.js";
@@ -22,7 +22,8 @@ import useWindowSize from "components/Hooks/useWindowSize.js";
 
 import styles from "assets/jss/nextjs-material-dashboard/components/headerLinksStyle.js";
 
-export default function AdminNavbarLinks() {
+export default function AdminNavbarLinks(props) {
+  const { isDashboard } = props;
   const size = useWindowSize();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
@@ -66,18 +67,20 @@ export default function AdminNavbarLinks() {
           <Search />
         </Button>
       </div>
-      <Button
-        color={size.width > 959 ? "transparent" : "white"}
-        justIcon={size.width > 959}
-        simple={!(size.width > 959)}
-        aria-label="Dashboard"
-        className={classes.buttonLink}
-      >
-        <Dashboard className={classes.icons} />
-        <Hidden mdUp implementation="css">
-          <p className={classes.linkText}>Dashboard</p>
-        </Hidden>
-      </Button>
+      {isDashboard && (
+        <Button
+          color={size.width > 959 ? "transparent" : "white"}
+          justIcon={size.width > 959}
+          simple={!(size.width > 959)}
+          aria-label="DateRange"
+          className={classes.buttonLink}
+        >
+          <DateRange className={classes.icons} />
+          {/* <Hidden mdUp implementation="css">
+            <p className={classes.linkText}>Dashboard</p>
+          </Hidden> */}
+        </Button>
+      )}
       <div className={classes.manager}>
         <Button
           color={size.width > 959 ? "transparent" : "white"}

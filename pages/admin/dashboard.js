@@ -54,18 +54,19 @@ function Dashboard() {
               <CardIcon color="warning">
                 <Icon>content_copy</Icon>
               </CardIcon>
-              <p className={classes.cardCategory}>Aylik Satis Adedi</p>
+              <p className={classes.cardCategory}>Satis Adedi</p>
               <h3 className={classes.cardTitle}>
-                49/50 <small>GB</small>
+                49 <small></small>
               </h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
-                <Danger>
+                {/* <Danger>
                   <Warning />
-                </Danger>
+                </Danger> */}
+                <Update />
                 <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                  Get more space
+                  Son 1 ay
                 </a>
               </div>
             </CardFooter>
@@ -73,34 +74,18 @@ function Dashboard() {
         </GridItem>
         <GridItem xs={12} sm={6} md={3}>
           <Card>
-            <CardHeader color="dark" stats icon>
-              <CardIcon color="dark">
+            <CardHeader color="success" stats icon>
+              <CardIcon color="success">
                 <Store />
               </CardIcon>
-              <p className={classes.cardCategory}>Aylik Kazanc</p>
-              <h3 className={classes.cardTitle}>$34,245</h3>
+              <p className={classes.cardCategory}>Kazanc</p>
+              <h3 className={classes.cardTitle}>$3,245</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
-                <DateRange />
-                Last 24 Hours
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="danger" stats icon>
-              <CardIcon color="danger">
-                <Icon>info_outline</Icon>
-              </CardIcon>
-              <p className={classes.cardCategory}>Son Siparis Bilgisi</p>
-              <h3 className={classes.cardTitle}>Ürün: </h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <LocalOffer />
-                Tracked from Github
+                {/* <DateRange /> */}
+                <Update />
+                Son 1 ay
               </div>
             </CardFooter>
           </Card>
@@ -109,15 +94,34 @@ function Dashboard() {
           <Card>
             <CardHeader color="info" stats icon>
               <CardIcon color="info">
-                <Accessibility />
+                <Icon>info_outline</Icon>
               </CardIcon>
-              <p className={classes.cardCategory}>Followers</p>
-              <h3 className={classes.cardTitle}>+245</h3>
+              <p className={classes.cardCategory}>Toplam Rulo Satis</p>
+              <h3 className={classes.cardTitle}>110</h3>
+            </CardHeader>
+            <CardFooter stats>
+              <div className={classes.stats}>
+                {/* <LocalOffer /> */}
+                <Update />
+                Son 1 ay
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={6} md={3}>
+          <Card>
+            <CardHeader color="info" stats icon>
+              <CardIcon color="info">
+                {/* <Accessibility /> */}
+                <Icon>info_outline</Icon>
+              </CardIcon>
+              <p className={classes.cardCategory}>Toplam Panel Satis</p>
+              <h3 className={classes.cardTitle}>245</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
                 <Update />
-                Just Updated
+                Son 1 ay
               </div>
             </CardFooter>
           </Card>
