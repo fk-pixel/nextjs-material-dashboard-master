@@ -16,7 +16,7 @@ import Notifications from "@material-ui/icons/Notifications";
 import DateRange from "@material-ui/icons/DateRange";
 import Search from "@material-ui/icons/Search";
 // core components
-import CustomInput from "components/CustomInput/CustomInput.js";
+import TextInput from "components/TextInput/TextInput.js";
 import Button from "components/CustomButtons/Button.js";
 import useWindowSize from "components/Hooks/useWindowSize.js";
 
@@ -29,6 +29,8 @@ export default function AdminNavbarLinks(props) {
   const classes = useStyles();
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
+  const [openDateRange, setOpenDateRange] = React.useState(null);
+
   const handleClickNotification = (event) => {
     if (openNotification && openNotification.contains(event.target)) {
       setOpenNotification(null);
@@ -36,9 +38,11 @@ export default function AdminNavbarLinks(props) {
       setOpenNotification(event.currentTarget);
     }
   };
+
   const handleCloseNotification = () => {
     setOpenNotification(null);
   };
+
   const handleClickProfile = (event) => {
     if (openProfile && openProfile.contains(event.target)) {
       setOpenProfile(null);
@@ -46,13 +50,27 @@ export default function AdminNavbarLinks(props) {
       setOpenProfile(event.currentTarget);
     }
   };
+
   const handleCloseProfile = () => {
     setOpenProfile(null);
   };
+
+  const handleClickDateRange = (event) => {
+    if (openDateRange && openDateRange.contains(event.target)) {
+      setOpenDateRange(null);
+    } else {
+      setOpenDateRange(event.currentTarget);
+    }
+  };
+
+  const handleCloseDateRange = () => {
+    setOpenDateRange(null);
+  };
+
   return (
     <div>
       <div className={classes.searchWrapper}>
-        <CustomInput
+        <TextInput
           formControlProps={{
             className: classes.margin + " " + classes.search,
           }}
@@ -68,18 +86,76 @@ export default function AdminNavbarLinks(props) {
         </Button>
       </div>
       {isDashboard && (
-        <Button
-          color={size.width > 959 ? "transparent" : "white"}
-          justIcon={size.width > 959}
-          simple={!(size.width > 959)}
-          aria-label="DateRange"
-          className={classes.buttonLink}
-        >
-          <DateRange className={classes.icons} />
-          {/* <Hidden mdUp implementation="css">
+        <div className={classes.manager}>
+          <Button
+            color={size.width > 959 ? "transparent" : "white"}
+            justIcon={size.width > 959}
+            simple={!(size.width > 959)}
+            aria-label="DateRange"
+            onClick={handleClickDateRange}
+            className={classes.buttonLink}
+          >
+            <DateRange className={classes.icons} />
+            {/* <Hidden mdUp implementation="css">
             <p className={classes.linkText}>Dashboard</p>
           </Hidden> */}
-        </Button>
+          </Button>
+          <Poppers
+            open={Boolean(openDateRange)}
+            anchorEl={openDateRange}
+            transition
+            disablePortal
+            className={
+              classNames({ [classes.popperClose]: !openDateRange }) +
+              " " +
+              classes.popperNav
+            }
+          >
+            {({ TransitionProps, placement }) => (
+              <Grow
+                {...TransitionProps}
+                id="date-reange-menu-list-grow"
+                style={{
+                  transformOrigin:
+                    placement === "bottom" ? "center top" : "center bottom",
+                }}
+              >
+                <Paper>
+                  <ClickAwayListener onClickAway={handleCloseDateRange}>
+                    <MenuList role="menu">
+                      <MenuItem
+                        onClick={handleCloseDateRange}
+                        className={classes.dropdownItem}
+                      >
+                        Son 24 Saat
+                      </MenuItem>
+                      <MenuItem
+                        onClick={handleCloseDateRange}
+                        className={classes.dropdownItem}
+                      >
+                        Son 1 Hafta
+                      </MenuItem>
+                      <Divider light />
+                      <MenuItem
+                        onClick={handleCloseDateRange}
+                        className={classes.dropdownItem}
+                      >
+                        Son 1 Ay
+                      </MenuItem>
+                      <MenuItem
+                        onClick={handleCloseDateRange}
+                        className={classes.dropdownItem}
+                      >
+                        Son 1 Yil
+                      </MenuItem>
+                      <Divider light />
+                    </MenuList>
+                  </ClickAwayListener>
+                </Paper>
+              </Grow>
+            )}
+          </Poppers>
+        </div>
       )}
       <div className={classes.manager}>
         <Button

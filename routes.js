@@ -21,6 +21,7 @@ import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
+import BorderColor from "@material-ui/icons/BorderColor";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
 import BubbleChart from "@material-ui/icons/BubbleChart";
 import LocationOn from "@material-ui/icons/LocationOn";
@@ -46,10 +47,10 @@ const dashboardRoutes = [
     layout: "/admin",
   },
   {
-    path: "/table",
-    name: "Aylik Tablo",
+    path: "/order-form",
+    name: "Siparis Formu",
     rtlName: "ملف تعريفي للمستخدم",
-    icon: Person,
+    icon: BorderColor,
 
     layout: "/admin",
   },

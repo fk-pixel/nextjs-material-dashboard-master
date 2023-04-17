@@ -12,19 +12,22 @@ export default function AutocompleteForm(props) {
     getOptionLabel,
     multiple,
     label,
+    name,
+    value,
+    onChange,
     ...params
   } = props;
 
-  const getValue = React.useCallback(() => {
-    if (params.name) return params[params.name];
+  // const getValue = React.useCallback(() => {
+  //   if (params.name) return params[params.name];
 
-    if (multiple) return [];
+  //   if (multiple) return [];
 
-    return null;
-  }, [params.name, multiple]);
+  //   return null;
+  // }, [params.name, multiple]);
 
-  const [value, setValue] = React.useState(getValue);
-  //   const [open, setOpen] = React.useState(true);
+  // const [value, setValue] = React.useState(getValue);
+  // //   const [open, setOpen] = React.useState(true);
 
   //   const apiRef = useGridApiContext();
 
@@ -33,33 +36,31 @@ export default function AutocompleteForm(props) {
     setFields((prevState) => ({ ...prevState, [name]: newValue }));
   };
 
-  const handleChange = React.useCallback(
-    (event, newValue) => {
-      // event.stopPropagation();
-      setValue({
-        //id: params.id,
-        value: newValue?.label !== undefined ? newValue.label : newValue,
-      });
+  // const handleChange = React.useCallback((event, newValue) => {
+  //   // event.stopPropagation();
+  //   setValue({
+  //     //id: params.id,
+  //     value: newValue?.label !== undefined ? newValue.label : newValue,
+  //   });
 
-      //   if (params.name !== undefined) {
-      //     _.set(params, params.name, newValue);
-      //   }
-    },
-    [value]
-  );
+  //   //   if (params.name !== undefined) {
+  //   //     _.set(params, params.name, newValue);
+  //   //   }
+  // }, []);
 
-  const handleInputChange = (e, data) => {
-    return data;
-  };
+  // const handleInputChange = (e, value) => {
+  //   return value;
+  // };
 
   return (
     <Autocomplete
+      name={name}
       value={value}
-      onChange={handleChange}
+      onChange={onChange}
       // onChange={() => changeHandler(name)}
-      onInputChange={(event, value) =>
-        freeSolo && !multiple && event && handleInputChange(event, value)
-      }
+      // onInputChange={(event, value) =>
+      //   freeSolo && !multiple && event && handleInputChange(event, value)
+      // }
       //   open={open}
       //   onOpen={() => setOpen(true)}
       //   onClose={() => setOpen(false)}
@@ -69,7 +70,6 @@ export default function AutocompleteForm(props) {
       //       top: 0,
       //     },
       //   }}
-
       multiple={multiple}
       options={options ?? []}
       freeSolo={freeSolo}

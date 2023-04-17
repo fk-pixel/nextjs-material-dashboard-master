@@ -45,6 +45,40 @@ import styles from "assets/jss/nextjs-material-dashboard/views/dashboardStyle.js
 function Dashboard() {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
+  const [item, setItem] = React.useState([]);
+
+  React.useEffect(() => {
+    if (JSON.parse(localStorage.getItem("orders")) !== undefined)
+      setItem(JSON.parse(localStorage.getItem("orders")));
+  }, []);
+
+  const getCardInformations = React.useCallback(() => {
+    if (item !== null) {
+      const quantityCardInfo = item.length;
+
+      const salesCardInfo = item
+        .map((x) => (x.price !== undefined ? x.price : null))
+        .reduce((acc, val) => acc + Math.round(val), 0);
+
+      const ruloSalesInfo = item.filter(
+        (x) => x.productMainType === "Rulo"
+      ).length;
+
+      const panelSalesInfo = item.filter(
+        (x) => x.productMainType === "Panel"
+      ).length;
+
+      return { quantityCardInfo, salesCardInfo, ruloSalesInfo, panelSalesInfo };
+    }
+  }, [item]);
+
+  const { quantityCardInfo, salesCardInfo, ruloSalesInfo, panelSalesInfo } =
+    getCardInformations();
+
+  function onChangeFunc() {
+    setItem(JSON.parse(localStorage.getItem("orders")));
+  }
+
   return (
     <div>
       <GridContainer>
@@ -56,7 +90,7 @@ function Dashboard() {
               </CardIcon>
               <p className={classes.cardCategory}>Satis Adedi</p>
               <h3 className={classes.cardTitle}>
-                49 <small></small>
+                {quantityCardInfo} <small></small>
               </h3>
             </CardHeader>
             <CardFooter stats>
@@ -79,7 +113,12 @@ function Dashboard() {
                 <Store />
               </CardIcon>
               <p className={classes.cardCategory}>Kazanc</p>
-              <h3 className={classes.cardTitle}>$3,245</h3>
+              <h3 className={classes.cardTitle}>
+                ${salesCardInfo}
+                {/* {item
+                  .filter((x) => x === "price")
+                  .reduce((acc, val) => (acc + val, {}))} */}
+              </h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -97,7 +136,7 @@ function Dashboard() {
                 <Icon>info_outline</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Toplam Rulo Satis</p>
-              <h3 className={classes.cardTitle}>110</h3>
+              <h3 className={classes.cardTitle}>{ruloSalesInfo}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -116,7 +155,7 @@ function Dashboard() {
                 <Icon>info_outline</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Toplam Panel Satis</p>
-              <h3 className={classes.cardTitle}>245</h3>
+              <h3 className={classes.cardTitle}>{panelSalesInfo}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -203,7 +242,7 @@ function Dashboard() {
       </GridContainer> */}
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
-          <DataTable />
+          <DataTable data={item} onChangeDataTable={onChangeFunc} />
         </GridItem>
       </GridContainer>
 

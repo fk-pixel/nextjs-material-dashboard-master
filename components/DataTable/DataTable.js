@@ -1,11 +1,13 @@
 import * as React from "react";
+import { useRouter, Router } from "next/router";
+
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
 import { Button, Box, Tooltip, Avatar } from "@mui/material";
 import FileUpload from "@mui/icons-material/FileUpload";
 import Save from "@mui/icons-material/Save";
 import Add from "@mui/icons-material/Add";
 import Delete from "@mui/icons-material/Delete";
-import AutocompleteEditCell from "../../components/AutocompleteEditCell/AutocompleteEditCell.js";
+import AutocompleteEditCell from "../Autocomplete/AutocompleteEditCell.js";
 import moment from "moment";
 
 import {
@@ -24,28 +26,286 @@ const createRandomRow = () => {
   return { id: idCounter };
 };
 
-export default function BasicEditingGrid() {
-  const { traderName, shortcut } = getShortcut();
+// var getItems = JSON.parse(localStorage.getItem("orders"));
+// var getItems2 = window.localStorage.getItem("orders");
 
-  const data = [
+export default function BasicEditingGrid(props) {
+  const { data, onChangeDataTable } = props;
+
+  var newData = getDataWithAvatar(data);
+
+  // const data = [
+  //   {
+  //     id: 1,
+  //     title: traderName,
+  //     price: 25,
+  //     quantity: randomQuantity(),
+  //     saleDate: randomCreatedDate(), //moment(randomCreatedDate(), "YYYY-MM-DD"),
+  //     gift: randomAddress(),
+  //     avatar: shortcut,
+  //     status: "🟡 Üretime gönderildi",
+  //     createdDate: new Date(),
+  //   },
+  // ];
+
+  // const [rows, setRows] = React.useState(newData);
+  // const [rows, setRows] = React.useState(() => getItems);
+
+  // const handleAddRow = () => {
+  //   setRows((data) => [...data, createRandomRow()]);
+  // };
+
+  const onUpload = (e, row) => {
+    e.stopPropagation();
+    //do whatever you want with the row
+    alert(
+      `Ürün kimligi: ${row.id} ve ürün bilgisi: ${row.title}, ${row.price} olan yeni bir icerik yükleyiniz.`
+    );
+  };
+
+  const onSave = (e, row) => {
+    e.stopPropagation();
+
+    // const editedCellIndex = newData.indexOf(
+    //   newData.find((x) => x.id === row.id) || newData[newData.length]
+    // );
+    // newData[editedCellIndex] = [...newData[editedCellIndex], row];
+
+    // if (editedCellIndex !== -1) {
+    // setChartConfigurations([...chartConfigurations]);
+    // }
+    const notEditedData = newData.filter((x) => x.id !== row.id);
+
+    const editedData = {
+      id: row.id,
+      number: row.number,
+      company: "dowiedo",
+      username: "fk2534",
+      product: row.product,
+      size: row.size,
+      size1: null,
+      size2: null,
+      productMainType: row.productMainType,
+      productSubType: row.productSubType,
+      productCargoType: row.productCargoType,
+      gift: row.gift,
+      giftSize: row.giftSize,
+      size3: null,
+      size4: null,
+      cost: row.cost,
+      packagingCost: row.packagingCost,
+      shippingCost: row.shippingCost,
+      description: row.description,
+      file: null,
+      status: row.status,
+      price: row.price,
+      createdDate: row.createdDate,
+      createdBy: "fk2534",
+    };
+
+    const afterEditData = localStorage.setItem(
+      "orders",
+      JSON.stringify([...notEditedData, editedData])
+    );
+
+    onChangeDataTable(afterEditData);
+  };
+
+  const onRemove = (e, row) => {
+    e.stopPropagation();
+
+    const afterRemoveData = newData.filter((x) => x.id !== row.id);
+
+    localStorage.setItem("orders", JSON.stringify(afterRemoveData));
+
+    onChangeDataTable(afterRemoveData);
+  };
+
+  const columns = [
+    { field: "id", headerName: "ID", width: 50, editable: false },
     {
-      id: 1,
-      title: traderName,
-      price: 25,
-      quantity: randomQuantity(),
-      saleDate: randomCreatedDate(), //moment(randomCreatedDate(), "YYYY-MM-DD"),
-      gift: randomAddress(),
-      avatar: shortcut,
-      status: "🟡 Beklemede",
-      createdDate: new Date(),
+      field: "avatar",
+      headerName: "",
+      width: 60,
+      renderCell: (params) => {
+        return (
+          <Tooltip title={"Kullanici"}>
+            <Avatar sx={{ bgcolor: "warning.main" }} alt="Remy Sharp">
+              {params.value}
+            </Avatar>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      field: "company",
+      headerName: "Magaza",
+      // width: 100,
+      editable: true,
+    },
+    {
+      field: "product",
+      headerName: "Ürün",
+      width: 200,
+      editable: true,
+    },
+    {
+      field: "size",
+      headerName: "Ölcü",
+      width: 70,
+      type: "number",
+      editable: true,
+    },
+    {
+      field: "productMainType",
+      headerName: "Ürün Ana Tipi",
+      // width: 100,
+      editable: true,
+    },
+    {
+      field: "productSubType",
+      headerName: "Ürün Alt Tipi",
+      // width: 100,
+      editable: true,
+    },
+    {
+      field: "productCargoType",
+      headerName: "Ürün Kargo Tipi",
+      // width: 100,
+      editable: true,
+    },
+    {
+      field: "gift",
+      headerName: "Hediye Ürün",
+      width: 200,
+      editable: true,
+    },
+    {
+      field: "giftSize",
+      headerName: "Hediye Ürün Ölcü",
+      width: 70,
+      type: "number",
+      editable: true,
+    },
+    { field: "cost", headerName: "Maliyet", type: "number", editable: true },
+    {
+      field: "packagingCost",
+      headerName: "Paket Maliyeti",
+      type: "number",
+      editable: true,
+    },
+    {
+      field: "shippingCost",
+      headerName: "Kargo Maliyeti",
+      type: "number",
+      editable: true,
+    },
+    {
+      field: "price",
+      headerName: "Satis Tutari",
+      type: "number",
+      editable: true,
+    },
+    {
+      field: "description",
+      headerName: "Aciklama",
+      width: 200,
+      editable: true,
+    },
+    {
+      field: "status",
+      headerName: "Statü",
+      width: 150,
+      editable: true,
+      // cellEditorParams: {
+      //   do: "fthbtl",
+      // },
+      renderEditCell: (params) => {
+        return (
+          <AutocompleteEditCell
+            {...params}
+            value={params.row.status}
+            options={STATUS_OPTIONS}
+            getOptionLabel={(o) => o.label || ""}
+            freeSolo={true}
+            autoHighlight={false}
+            multiple={false}
+            disableClearable={true}
+          />
+        );
+      },
+    },
+    {
+      field: "createdDate",
+      headerName: "Kayit Tarihi",
+      type: "dateTime",
+      valueGetter: ({ value }) => new Date(value),
+      editable: false,
+    },
+    {
+      field: "createdBy",
+      headerName: "Olusturan",
+      // width: 300,
+      editable: true,
+    },
+    {
+      field: "upload",
+      headerName: "",
+      width: 70,
+      renderCell: (params) => {
+        return (
+          <Tooltip title={"Belge ekle"}>
+            <Button
+              onClick={(e) => onUpload(e, params.row)}
+              variant="contained"
+              color="primary"
+              size="small"
+            >
+              <FileUpload fontSize="small" />
+            </Button>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      field: "save",
+      headerName: "",
+      width: 70,
+      renderCell: (params) => {
+        return (
+          <Tooltip title={"Siparisi kaydet"}>
+            <Button
+              onClick={(e) => onSave(e, params.row)}
+              variant="contained"
+              color="primary"
+              size="small"
+            >
+              <Save fontSize="small" />
+            </Button>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      field: "delete",
+      headerName: "",
+      width: 70,
+      renderCell: (params) => {
+        return (
+          <Tooltip title={"Siparisi sil"}>
+            <Button
+              onClick={(e) => onRemove(e, params.row)}
+              variant="contained"
+              color="secondary"
+              size="small"
+            >
+              <Delete fontSize="small" />
+            </Button>
+          </Tooltip>
+        );
+      },
     },
   ];
-
-  const [rows, setRows] = React.useState(() => data);
-
-  const handleAddRow = () => {
-    setRows((data) => [...data, createRandomRow()]);
-  };
 
   return (
     <div style={{ height: 850, width: "100%" }}>
@@ -59,31 +319,19 @@ export default function BasicEditingGrid() {
           <Add fontSize="small" color="inherit" />
         </Button>
         <DataGrid
-          rows={rows ?? []}
+          showCellVerticalBorder
+          getRowId={(row) => row.id}
+          rows={newData ?? []}
           columns={columns}
-          pageSize={25}
-          // rowsPerPageOptions={[5]}
+          // pageSize={25}
+          rowsPerPageOptions={[25]}
         />
       </Box>
     </div>
   );
 }
 
-const onUpload = (e, row) => {
-  e.stopPropagation();
-  //do whatever you want with the row
-  alert(
-    `Ürün kimligi: ${row.id} ve ürün bilgisi: ${row.title}, ${row.price} olan yeni bir icerik yükleyiniz.`
-  );
-};
-
-const onSave = (e, row) => {
-  e.stopPropagation();
-
-  console.log(row);
-};
-
-function getShortcut() {
+export function getShortcut() {
   const traderName = randomTraderName();
   const firstLetter = traderName?.split(" ")[0][0];
   const secondLetter = traderName?.split(" ")[1][0];
@@ -92,158 +340,33 @@ function getShortcut() {
   return { traderName, shortcut };
 }
 
-const STATUS_OPTIONS = [
-  { id: "rejected", label: "🔴 Reddedildi" },
-  { id: "inProgress", label: "🟡 Beklemede" },
-  { id: "completed", label: "🟢 Gönderildi" },
-];
+export function getDataWithAvatar(data) {
+  if (data !== undefined && data !== null) {
+    const newData = [];
 
-const columns = [
-  { field: "id", headerName: "No", width: 50, editable: false }, // data.fetchShopID.shop_id
-  {
-    field: "avatar",
-    headerName: "",
-    width: 80,
-    renderCell: (params) => {
-      return (
-        <Tooltip title={"Magaza"}>
-          <Avatar sx={{ bgcolor: "warning.main" }} alt="Remy Sharp">
-            {params.value}
-          </Avatar>
-        </Tooltip>
-      );
-    },
-  },
-  { field: "title", headerName: "Ürün", width: 300, editable: true }, // data.fetchShopID.shop_id
-  { field: "price", headerName: "Fiyat", type: "number", editable: true }, // data.fetchShopID.shop_id
-  { field: "quantity", headerName: "Adet", type: "number", editable: true },
-  {
-    field: "saleDate",
-    headerName: "Satis Tarihi",
-    type: "date",
-    editable: true,
-  },
-  { field: "gift", headerName: "Hediye Ürün", width: 300, editable: true },
-  {
-    field: "giftPrice",
-    headerName: "Hediye Ürün Fiyat",
-    type: "number",
-    width: 180,
-    editable: true,
-  },
-  {
-    field: "giftQuantity",
-    headerName: "Hediye Ürün Adet",
-    type: "number",
-    width: 180,
-    editable: true,
-  },
-  {
-    field: "status",
-    headerName: "Statü",
-    width: 180,
-    editable: true,
-    // cellEditorParams: {
-    //   do: "fthbtl",
-    // },
-    renderEditCell: (params) => {
-      return (
-        <AutocompleteEditCell
-          {...params}
-          value={params.row.status}
-          options={STATUS_OPTIONS}
-          getOptionLabel={(o) => o.label || ""}
-          freeSolo={true}
-          autoHighlight={false}
-          multiple={false}
-          disableClearable={true}
-        />
-      );
-    },
-  },
-  {
-    field: "totalPrice",
-    headerName: "Toplam Fiyat",
-    type: "number",
-    editable: true,
-  },
-  {
-    field: "createdDate",
-    headerName: "Kayit Tarihi",
-    type: "date",
-    editable: false,
-  },
-  {
-    field: "upload",
-    headerName: "",
-    width: 80,
-    renderCell: (params) => {
-      return (
-        <Tooltip title={"Belge ekle"}>
-          <Button
-            onClick={(e) => onUpload(e, params.row)}
-            variant="contained"
-            color="primary"
-            size="small"
-          >
-            <FileUpload fontSize="small" />
-          </Button>
-        </Tooltip>
-      );
-    },
-  },
-  {
-    field: "save",
-    headerName: "",
-    width: 80,
-    renderCell: (params) => {
-      return (
-        <Tooltip title={"Siparisi kaydet"}>
-          <Button
-            onClick={(e) => onSave(e, params.row)}
-            variant="contained"
-            color="primary"
-            size="small"
-          >
-            <Save fontSize="small" />
-          </Button>
-        </Tooltip>
-      );
-    },
-  },
-  {
-    field: "delete",
-    headerName: "",
-    width: 80,
-    renderCell: (params) => {
-      return (
-        <Tooltip title={"Siparisi sil"}>
-          <Button
-            onClick={(e) => onRemove(e, params.row)}
-            variant="contained"
-            color="secondary"
-            size="small"
-          >
-            <Delete fontSize="small" />
-          </Button>
-        </Tooltip>
-      );
-    },
-  },
-  //   {
-  //     field: "dateCreated",
-  //     headerName: "Date Created",
-  //     type: "date",
-  //     width: 180,
-  //     editable: true,
-  //   },
-  //   {
-  //     field: "lastLogin",
-  //     headerName: "Last Login",
-  //     type: "dateTime",
-  //     width: 220,
-  //     editable: true,
-  //   },
+    for (const i of data) {
+      const firstLetter = i.username?.split(" ")[0][0];
+
+      const secondLetter =
+        i.username?.split(" ")[1] !== undefined
+          ? i.username?.split(" ")[1][0]
+          : "";
+
+      const shortcut = firstLetter + secondLetter;
+
+      newData.push({ ...i, avatar: shortcut });
+    }
+    return newData;
+  }
+
+  return;
+}
+
+const STATUS_OPTIONS = [
+  { id: "canceledAfterProduction", label: "🔴 Üretimden sonra iptal edildi" },
+  { id: "canceledBeforeProduction", label: "🟠 Üretimden önce iptal edildi" },
+  { id: "sentToProduction", label: "🟡 Üretime gönderildi" },
+  { id: "shipped", label: "🟢 Kargolandi" },
 ];
 
 // const rows = [
@@ -283,3 +406,26 @@ const columns = [
 //     lastLogin: randomUpdatedDate(),
 //   },
 // ];
+
+/* async local storage data set and get example 
+
+const [veggie, setVeggie] = useState();
+  useEffect(() => {
+    getVeggie();
+  }, []);
+
+ const getVeggie = async () => {
+    const check = localStorage.getItem("veggie");
+    if (check) {
+      setVeggie(JSON.parse(check));
+    } else {
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+      localStorage.setItem("veggie", JSON.stringify(data.recipes));
+      setVeggie(data.recipes);
+      console.log("app-data", data.recipes);
+    }
+  };
+
+
+*/

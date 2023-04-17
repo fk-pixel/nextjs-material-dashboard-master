@@ -7,7 +7,7 @@ import Admin from "layouts/Admin.js";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import CustomInput from "components/CustomInput/CustomInput.js";
+import TextInput from "components/TextInput/TextInput.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -51,7 +51,7 @@ function UserProfile() {
             <CardBody>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={5}>
-                  <CustomInput
+                  <TextInput
                     labelText="Company (disabled)"
                     id="company-disabled"
                     formControlProps={{
@@ -63,7 +63,7 @@ function UserProfile() {
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={3}>
-                  <CustomInput
+                  <TextInput
                     labelText="Username"
                     id="username"
                     formControlProps={{
@@ -72,7 +72,7 @@ function UserProfile() {
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
+                  <TextInput
                     labelText="Email address"
                     id="email-address"
                     formControlProps={{
@@ -83,7 +83,7 @@ function UserProfile() {
               </GridContainer>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
+                  <TextInput
                     labelText="First Name"
                     id="first-name"
                     formControlProps={{
@@ -92,7 +92,7 @@ function UserProfile() {
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={6}>
-                  <CustomInput
+                  <TextInput
                     labelText="Last Name"
                     id="last-name"
                     formControlProps={{
@@ -103,7 +103,7 @@ function UserProfile() {
               </GridContainer>
               <GridContainer>
                 <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
+                  <TextInput
                     labelText="City"
                     id="city"
                     formControlProps={{
@@ -112,7 +112,7 @@ function UserProfile() {
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
+                  <TextInput
                     labelText="Country"
                     id="country"
                     formControlProps={{
@@ -121,7 +121,7 @@ function UserProfile() {
                   />
                 </GridItem>
                 <GridItem xs={12} sm={12} md={4}>
-                  <CustomInput
+                  <TextInput
                     labelText="Postal Code"
                     id="postal-code"
                     formControlProps={{
@@ -133,7 +133,7 @@ function UserProfile() {
               <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
                   <InputLabel style={{ color: "#AAAAAA" }}>About me</InputLabel>
-                  <CustomInput
+                  <TextInput
                     labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
                     id="about-me"
                     formControlProps={{

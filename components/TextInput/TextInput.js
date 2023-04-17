@@ -12,17 +12,19 @@ import Check from "@material-ui/icons/Check";
 // core components
 import styles from "assets/jss/nextjs-material-dashboard/components/customInputStyle.js";
 
-export default function CustomInput(props) {
+export default function TextInput(props) {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const {
     formControlProps,
     labelText,
     id,
+    value,
     labelProps,
     inputProps,
     error,
     success,
+    onChange,
   } = props;
 
   const labelClasses = classNames({
@@ -46,6 +48,7 @@ export default function CustomInput(props) {
         <InputLabel
           className={classes.labelRoot + labelClasses}
           htmlFor={id}
+          onChange={onChange}
           {...labelProps}
         >
           {labelText}
@@ -58,6 +61,7 @@ export default function CustomInput(props) {
           underline: underlineClasses,
         }}
         id={id}
+        value={value}
         {...inputProps}
       />
       {error ? (
@@ -69,7 +73,7 @@ export default function CustomInput(props) {
   );
 }
 
-CustomInput.propTypes = {
+TextInput.propTypes = {
   labelText: PropTypes.node,
   labelProps: PropTypes.object,
   id: PropTypes.string,

@@ -15,7 +15,7 @@ import Notifications from "@material-ui/icons/Notifications";
 import Dashboard from "@material-ui/icons/Dashboard";
 import Search from "@material-ui/icons/Search";
 // core components
-import CustomInput from "components/CustomInput/CustomInput.js";
+import TextInput from "components/TextInput/TextInput.js";
 import Button from "components/CustomButtons/Button.js";
 import useWindowSize from "components/Hooks/useWindowSize.js";
 
@@ -41,7 +41,7 @@ export default function RTLNavbarLinks() {
   return (
     <div>
       <div className={classes.searchWrapper}>
-        <CustomInput
+        <TextInput
           formControlProps={{
             className: classes.margin + " " + classes.search,
           }}
