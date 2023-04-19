@@ -113,22 +113,26 @@ function OrderForm() {
 
   const classes = useStyles();
 
-  const [myState, setMyState] = React.useState({
+  const [orderState, setOrderState] = React.useState({
     id: uuidv4(),
     number: uniqueId(),
     company: "dowiedo",
     username: "fk2534",
     product: "",
-    size: "",
-    size1: null,
-    size2: null,
+    productSize: "",
+    productSizeWidth: null,
+    productSizeHeight: null,
     productMainType: "",
     productSubType: "",
     productCargoType: "",
-    gift: "",
-    giftSize: "",
-    size3: null,
-    size4: null,
+    gift1: "",
+    gift1Size: "",
+    gift1SizeWidth: null,
+    gift1SizeHeight: null,
+    gift2: "",
+    gift2Size: "",
+    gift2SizeWidth: null,
+    gift2SizeHeight: null,
     cost: null,
     packagingCost: null,
     shippingCost: null,
@@ -140,56 +144,49 @@ function OrderForm() {
     createdBy: "fk2534",
   });
 
-  // const orders = localStorage.getItem("orders");
-
-  // const orderState = new Map(
-  //   myState !== null ? myState[0].idp((x) => [x.id, x]) : []
-  // );
-
-  // const [veggie, setVeggie] = useState();
-  // useEffect(() => {
-  //   getVeggie();
-  // }, []);
-
-  // const getVeggie = async () => {
-  //   const check = localStorage.getItem("veggie");
-  //   if (check) {
-  //     setVeggie(JSON.parse(check));
-  //   } else {
-  //     const res = await fetch(apiUrl);
-  //     const data = await res.json();
-  //     localStorage.setItem("orders", JSON.stringify(myState));
-  //     setVeggie(data.recipes);
-  //     console.log("app-data", data.recipes);
-  //   }
-  // };
-
   function handleSubmit(e) {
     // e.preventDefault();
-    if (myState !== undefined) {
-      var getItems = JSON.parse(localStorage.getItem("orders"));
+    if (orderState !== undefined) {
+      var orders = JSON.parse(localStorage.getItem("orders"));
 
-      if (getItems === null) {
-        getItems = [];
+      if (orders === null) {
+        orders = [];
       } else {
-        getItems;
+        orders;
       }
-      const { size1, size2, size3, size4, id, ...rest } = myState;
+
+      const {
+        productSizeWidth,
+        productSizeHeight,
+        gift1SizeWidth,
+        gift1SizeHeight,
+        gift2SizeWidth,
+        gift2SizeHeight,
+        id,
+        ...rest
+      } = orderState;
 
       const newID =
-        getItems.find((x) => x.id === id) !== undefined ? uuidv4() : id;
+        orders.find((x) => x.id === id) !== undefined ? uuidv4() : id;
 
       const ordersState = {
         ...rest,
         id: newID,
-        size: size1 !== null || size2 !== null ? size1 + "x" + size2 : null,
-        giftSize: size3 !== null || size4 !== null ? size3 + "x" + size4 : null,
+        productSize:
+          productSizeWidth !== null || productSizeHeight !== null
+            ? productSizeWidth + "x" + productSizeHeight
+            : null,
+        gift1Size:
+          gift1SizeWidth !== null || gift1SizeHeight !== null
+            ? gift1SizeWidth + "x" + gift1SizeHeight
+            : null,
+        gift2Size:
+          gift2SizeWidth !== null || gift2SizeHeight !== null
+            ? gift2SizeWidth + "x" + gift2SizeHeight
+            : null,
       };
 
-      localStorage.setItem(
-        "orders",
-        JSON.stringify([...getItems, ordersState])
-      );
+      localStorage.setItem("orders", JSON.stringify([...orders, ordersState]));
     }
   }
 
@@ -275,7 +272,7 @@ function OrderForm() {
                     <TextInput
                       labelText="Magaza"
                       id="company"
-                      value={myState.company}
+                      value={orderState.company}
                       formControlProps={{
                         fullWidth: true,
                       }}
@@ -283,7 +280,10 @@ function OrderForm() {
                         disabled: true,
                       }}
                       onChange={(e) =>
-                        setMyState({ ...myState, company: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          company: e.target.value,
+                        })
                       }
                     />
                   </GridItem>
@@ -291,7 +291,7 @@ function OrderForm() {
                     <TextInput
                       labelText="Yönetici"
                       id="username"
-                      value={myState.username}
+                      value={orderState.username}
                       formControlProps={{
                         fullWidth: true,
                       }}
@@ -299,11 +299,15 @@ function OrderForm() {
                         disabled: true,
                       }}
                       onChange={(e) =>
-                        setMyState({ ...myState, username: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          username: e.target.value,
+                        })
                       }
                     />
                   </GridItem>
                 </GridContainer>
+
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={6}>
                     <TextForm
@@ -311,11 +315,14 @@ function OrderForm() {
                       label="Ürün Adi"
                       id="product"
                       fullWidth
-                      value={myState.product}
+                      value={orderState.product}
                       size={"small"}
                       variant={"outlined"}
                       onChange={(e) =>
-                        setMyState({ ...myState, product: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          product: e.target.value,
+                        })
                       }
                     />
                   </GridItem>
@@ -327,13 +334,16 @@ function OrderForm() {
                     <TextForm
                       type="number"
                       label="En"
-                      id="size"
+                      id="productSizeWidth"
                       fullWidth
-                      value={myState.size1}
+                      value={orderState.productSizeWidth}
                       size={"small"}
                       variant={"outlined"}
                       onChange={(e) =>
-                        setMyState({ ...myState, size1: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          productSizeWidth: e.target.value,
+                        })
                       }
                     />
                   </GridItem>
@@ -342,24 +352,28 @@ function OrderForm() {
                     <TextForm
                       type="number"
                       label="Boy"
-                      id="size"
+                      id="productSizeHeight"
                       fullWidth
-                      value={myState.size2}
+                      value={orderState.productSizeHeight}
                       size={"small"}
                       variant={"outlined"}
                       onChange={(e) =>
-                        setMyState({ ...myState, size2: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          productSizeHeight: e.target.value,
+                        })
                       }
                     />
                   </GridItem>
                 </GridContainer>
+
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={4} style={{ marginTop: 36 }}>
                     <Autocomplete
                       id="productMainType"
                       onChange={(e, item) => {
-                        setMyState({
-                          ...myState,
+                        setOrderState({
+                          ...orderState,
                           productMainType: item.label,
                         });
                       }}
@@ -383,16 +397,16 @@ function OrderForm() {
                     <Autocomplete
                       id="productSubType"
                       onChange={(e, v) =>
-                        setMyState({
-                          ...myState,
+                        setOrderState({
+                          ...orderState,
                           productSubType: v.label,
                         })
                       }
                       isOptionEqualToValue={(option, value) =>
                         option.value === value.value
                       }
-                      disabled={myState.productMainType === "Cam"}
-                      options={selectSubOptions(myState.productMainType)}
+                      disabled={orderState.productMainType === "Cam"}
+                      options={selectSubOptions(orderState.productMainType)}
                       getOptionLabel={(o) => o.label || ""}
                       freeSolo={false}
                       disableClearable={true}
@@ -409,13 +423,15 @@ function OrderForm() {
                     <Autocomplete
                       id="productCargoType"
                       onChange={(e, v) =>
-                        setMyState({
-                          ...myState,
+                        setOrderState({
+                          ...orderState,
                           productCargoType: v.label,
                         })
                       }
-                      disabled={myState.productMainType !== "Panel"}
-                      options={selectShippingOptions(myState.productMainType)}
+                      disabled={orderState.productMainType !== "Panel"}
+                      options={selectShippingOptions(
+                        orderState.productMainType
+                      )}
                       getOptionLabel={(o) => o.label || ""}
                       freeSolo={false}
                       disableClearable={true}
@@ -429,33 +445,36 @@ function OrderForm() {
                     />
                   </GridItem>
                 </GridContainer>
+
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={6}>
                     <TextForm
                       type={"text"}
-                      label="Hediye"
-                      id="gift"
+                      label="Hediye1"
+                      id="gift1"
                       fullWidth
                       onChange={(e) =>
-                        setMyState({ ...myState, gift: e.target.value })
+                        setOrderState({ ...orderState, gift1: e.target.value })
                       }
                     />
                   </GridItem>
-                  {/* <Box display={"flex"} xs={12} sm={12} md={6}> */}
                   <Typography style={{ marinLeft: 12, marginTop: 46 }}>
-                    Hediye Ölcü:{" "}
+                    Hediye1 Ölcü:{" "}
                   </Typography>
                   <GridItem xs={12} sm={6} md={2}>
                     <TextForm
                       type="number"
                       label="En"
-                      id="size3"
+                      id="gift1SizeWidth"
                       fullWidth
-                      value={myState.size3}
+                      value={orderState.gift1SizeWidth}
                       size={"small"}
                       variant={"outlined"}
                       onChange={(e) =>
-                        setMyState({ ...myState, size3: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          gift1SizeWidth: e.target.value,
+                        })
                       }
                     />
                   </GridItem>
@@ -464,17 +483,72 @@ function OrderForm() {
                     <TextForm
                       type="number"
                       label="Boy"
-                      id="size4"
+                      id="gift1SizeHeight"
                       fullWidth
-                      value={myState.size4}
+                      value={orderState.gift1SizeHeight}
                       size={"small"}
                       variant={"outlined"}
                       onChange={(e) =>
-                        setMyState({ ...myState, size4: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          gift1SizeHeight: e.target.value,
+                        })
                       }
                     />
                   </GridItem>
-                  {/* </Box> */}
+                </GridContainer>
+
+                <GridContainer>
+                  {" "}
+                  <GridItem xs={12} sm={12} md={6}>
+                    <TextForm
+                      type={"text"}
+                      label="Hediye2"
+                      id="gift2"
+                      fullWidth
+                      onChange={(e) =>
+                        setOrderState({ ...orderState, gift2: e.target.value })
+                      }
+                    />
+                  </GridItem>
+                  <Typography style={{ marinLeft: 12, marginTop: 46 }}>
+                    Hediye2 Ölcü:{" "}
+                  </Typography>
+                  <GridItem xs={12} sm={6} md={2}>
+                    <TextForm
+                      type="number"
+                      label="En"
+                      id="gift2SizeWidth"
+                      fullWidth
+                      value={orderState.gift2SizeWidth}
+                      size={"small"}
+                      variant={"outlined"}
+                      onChange={(e) =>
+                        setOrderState({
+                          ...orderState,
+                          gift2SizeWidth: e.target.value,
+                        })
+                      }
+                    />
+                  </GridItem>
+                  <Typography style={{ marginTop: 40 }}>x</Typography>
+                  <GridItem xs={12} sm={6} md={2}>
+                    <TextForm
+                      type="number"
+                      label="Boy"
+                      id="gift2SizeHeight"
+                      fullWidth
+                      value={orderState.gift2SizeHeight}
+                      size={"small"}
+                      variant={"outlined"}
+                      onChange={(e) =>
+                        setOrderState({
+                          ...orderState,
+                          gift2SizeHeight: e.target.value,
+                        })
+                      }
+                    />
+                  </GridItem>
                 </GridContainer>
 
                 <GridContainer>
@@ -485,7 +559,7 @@ function OrderForm() {
                       id="cost"
                       fullWidth
                       onChange={(e) =>
-                        setMyState({ ...myState, cost: e.target.value })
+                        setOrderState({ ...orderState, cost: e.target.value })
                       }
                     />
                   </GridItem>
@@ -496,8 +570,8 @@ function OrderForm() {
                       id="packagingCost"
                       fullWidth
                       onChange={(e) =>
-                        setMyState({
-                          ...myState,
+                        setOrderState({
+                          ...orderState,
                           packagingCost: e.target.value,
                         })
                       }
@@ -510,7 +584,10 @@ function OrderForm() {
                       id="shippingCost"
                       fullWidth
                       onChange={(e) =>
-                        setMyState({ ...myState, shippingCost: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          shippingCost: e.target.value,
+                        })
                       }
                     />
                   </GridItem>
@@ -521,7 +598,7 @@ function OrderForm() {
                       id="price"
                       fullWidth
                       onChange={(e) =>
-                        setMyState({ ...myState, price: e.target.value })
+                        setOrderState({ ...orderState, price: e.target.value })
                       }
                     />
                   </GridItem>
@@ -534,38 +611,27 @@ function OrderForm() {
                       multiline
                       rows={4}
                       onChange={(e) =>
-                        setMyState({ ...myState, description: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          description: e.target.value,
+                        })
                       }
                     />
                   </GridItem>
                 </GridContainer>
+
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
                     <InputLabel style={{ color: "#AAAAAA", marginTop: 48 }}>
                       Dosya Ekle
                     </InputLabel>
-                    {/* <Button variant="contained" component="label">
-                    Upload File
-                    <input type="file" hidden />
-                  </Button> */}
                     <FileUpload
                       id={"file"}
                       onChange={(e) =>
-                        setMyState({ ...myState, file: e.target.value })
+                        setOrderState({ ...orderState, file: e.target.value })
                       }
                       {...fileUploadProp}
                     />
-                    {/* <CustomInput
-                    labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
-                    id="about-me"
-                    formControlProps={{
-                      fullWidth: true,
-                    }}
-                    inputProps={{
-                      multiline: true,
-                      rows: 5,
-                    }}
-                  /> */}
                   </GridItem>
                 </GridContainer>
               </CardBody>
@@ -583,27 +649,6 @@ function OrderForm() {
               </CardFooter>
             </Card>
           </GridItem>
-          {/* <GridItem xs={12} sm={12} md={4}>
-          <Card profile>
-            <CardAvatar profile>
-              <a href="#pablo" onClick={(e) => e.preventDefault()}>
-                <img src={avatar} alt="..." />
-              </a>
-            </CardAvatar>
-            <CardBody profile>
-              <h6 className={classes.cardCategory}>CEO / CO-FOUNDER</h6>
-              <h4 className={classes.cardTitle}>Alec Thompson</h4>
-              <p className={classes.description}>
-                Don{"'"}t be scared of the truth because we need to restart the
-                human foundation in truth And I love you like Kanye loves Kanye
-                I love Rick Owens’ bed design but the back is...
-              </p>
-              <Button color="primary" round>
-                Follow
-              </Button>
-            </CardBody>
-          </Card>
-        </GridItem> */}
         </GridContainer>
       </form>
     </div>

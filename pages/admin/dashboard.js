@@ -54,34 +54,12 @@ function Dashboard() {
   });
 
   React.useEffect(() => {
-    if (JSON.parse(localStorage.getItem("orders")) !== undefined)
+    if (JSON.parse(localStorage.getItem("orders")) !== undefined) {
       setItem(JSON.parse(localStorage.getItem("orders")));
-
-    if (item !== null && item !== undefined) {
-      const quantityCardInfo = item.length;
-
-      const salesCardInfo = item
-        .map((x) => (x.price !== undefined ? x.price : null))
-        .reduce((acc, val) => acc + Math.round(val), 0);
-
-      const ruloSalesInfo = item.filter(
-        (x) => x.productMainType === "Rulo"
-      ).length;
-
-      const panelSalesInfo = item.filter(
-        (x) => x.productMainType === "Panel"
-      ).length;
-
-      setInfos({
-        quantityCardInfo,
-        salesCardInfo,
-        ruloSalesInfo,
-        panelSalesInfo,
-      });
     }
-  }, [item]);
+  }, []);
 
-  // const getCardInformations = React.useCallback(() => {
+  // React.useEffect(() => {
   //   if (item !== null && item !== undefined) {
   //     const quantityCardInfo = item.length;
 
@@ -103,14 +81,29 @@ function Dashboard() {
   //       ruloSalesInfo,
   //       panelSalesInfo,
   //     });
-  //     //return { quantityCardInfo, salesCardInfo, ruloSalesInfo, panelSalesInfo };
-  //   } else {
+  //   }
+  // }, [infos]);
+
+  const quantityCardInfo = item.length;
+
+  const salesCardInfo = item
+    .map((x) => (x.price !== undefined ? x.price : null))
+    .reduce((acc, val) => acc + Math.round(val), 0);
+
+  const ruloSalesInfo = item.filter((x) => x.productMainType === "Rulo").length;
+
+  const panelSalesInfo = item.filter(
+    (x) => x.productMainType === "Panel"
+  ).length;
+  // React.useCallback(() => {
+  //   if (item !== null && item !== undefined) {
   //     setInfos({
-  //       quantityCardInfo: 0,
-  //       salesCardInfo: 0,
-  //       ruloSalesInfo: 0,
-  //       panelSalesInfo: 0,
+  //       quantityCardInfo,
+  //       salesCardInfo,
+  //       ruloSalesInfo,
+  //       panelSalesInfo,
   //     });
+  //     //return { quantityCardInfo, salesCardInfo, ruloSalesInfo, panelSalesInfo };
   //   }
   // }, [item]);
 
@@ -132,7 +125,7 @@ function Dashboard() {
               </CardIcon>
               <p className={classes.cardCategory}>Satis Adedi</p>
               <h3 className={classes.cardTitle}>
-                {infos.quantityCardInfo} <small></small>
+                {quantityCardInfo} <small></small>
               </h3>
             </CardHeader>
             <CardFooter stats>
@@ -156,7 +149,7 @@ function Dashboard() {
               </CardIcon>
               <p className={classes.cardCategory}>Kazanc</p>
               <h3 className={classes.cardTitle}>
-                ${infos.salesCardInfo}
+                ${salesCardInfo}
                 {/* {item
                   .filter((x) => x === "price")
                   .reduce((acc, val) => (acc + val, {}))} */}
@@ -178,7 +171,7 @@ function Dashboard() {
                 <Icon>info_outline</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Toplam Rulo Satis</p>
-              <h3 className={classes.cardTitle}>{infos.ruloSalesInfo}</h3>
+              <h3 className={classes.cardTitle}>{ruloSalesInfo}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -197,7 +190,7 @@ function Dashboard() {
                 <Icon>info_outline</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Toplam Panel Satis</p>
-              <h3 className={classes.cardTitle}>{infos.panelSalesInfo}</h3>
+              <h3 className={classes.cardTitle}>{panelSalesInfo}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
