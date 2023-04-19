@@ -46,14 +46,18 @@ function Dashboard() {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const [item, setItem] = React.useState([]);
+  const [infos, setInfos] = React.useState({
+    quantityCardInfo: 0,
+    salesCardInfo: 0,
+    ruloSalesInfo: 0,
+    panelSalesInfo: 0,
+  });
 
   React.useEffect(() => {
     if (JSON.parse(localStorage.getItem("orders")) !== undefined)
       setItem(JSON.parse(localStorage.getItem("orders")));
-  }, []);
 
-  const getCardInformations = React.useCallback(() => {
-    if (item !== null) {
+    if (item !== null && item !== undefined) {
       const quantityCardInfo = item.length;
 
       const salesCardInfo = item
@@ -68,12 +72,50 @@ function Dashboard() {
         (x) => x.productMainType === "Panel"
       ).length;
 
-      return { quantityCardInfo, salesCardInfo, ruloSalesInfo, panelSalesInfo };
+      setInfos({
+        quantityCardInfo,
+        salesCardInfo,
+        ruloSalesInfo,
+        panelSalesInfo,
+      });
     }
   }, [item]);
 
-  const { quantityCardInfo, salesCardInfo, ruloSalesInfo, panelSalesInfo } =
-    getCardInformations();
+  // const getCardInformations = React.useCallback(() => {
+  //   if (item !== null && item !== undefined) {
+  //     const quantityCardInfo = item.length;
+
+  //     const salesCardInfo = item
+  //       .map((x) => (x.price !== undefined ? x.price : null))
+  //       .reduce((acc, val) => acc + Math.round(val), 0);
+
+  //     const ruloSalesInfo = item.filter(
+  //       (x) => x.productMainType === "Rulo"
+  //     ).length;
+
+  //     const panelSalesInfo = item.filter(
+  //       (x) => x.productMainType === "Panel"
+  //     ).length;
+
+  //     setInfos({
+  //       quantityCardInfo,
+  //       salesCardInfo,
+  //       ruloSalesInfo,
+  //       panelSalesInfo,
+  //     });
+  //     //return { quantityCardInfo, salesCardInfo, ruloSalesInfo, panelSalesInfo };
+  //   } else {
+  //     setInfos({
+  //       quantityCardInfo: 0,
+  //       salesCardInfo: 0,
+  //       ruloSalesInfo: 0,
+  //       panelSalesInfo: 0,
+  //     });
+  //   }
+  // }, [item]);
+
+  // const { quantityCardInfo, salesCardInfo, ruloSalesInfo, panelSalesInfo } =
+  //   getCardInformations();
 
   function onChangeFunc() {
     setItem(JSON.parse(localStorage.getItem("orders")));
@@ -90,7 +132,7 @@ function Dashboard() {
               </CardIcon>
               <p className={classes.cardCategory}>Satis Adedi</p>
               <h3 className={classes.cardTitle}>
-                {quantityCardInfo} <small></small>
+                {infos.quantityCardInfo} <small></small>
               </h3>
             </CardHeader>
             <CardFooter stats>
@@ -114,7 +156,7 @@ function Dashboard() {
               </CardIcon>
               <p className={classes.cardCategory}>Kazanc</p>
               <h3 className={classes.cardTitle}>
-                ${salesCardInfo}
+                ${infos.salesCardInfo}
                 {/* {item
                   .filter((x) => x === "price")
                   .reduce((acc, val) => (acc + val, {}))} */}
@@ -136,7 +178,7 @@ function Dashboard() {
                 <Icon>info_outline</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Toplam Rulo Satis</p>
-              <h3 className={classes.cardTitle}>{ruloSalesInfo}</h3>
+              <h3 className={classes.cardTitle}>{infos.ruloSalesInfo}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -155,7 +197,7 @@ function Dashboard() {
                 <Icon>info_outline</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Toplam Panel Satis</p>
-              <h3 className={classes.cardTitle}>{panelSalesInfo}</h3>
+              <h3 className={classes.cardTitle}>{infos.panelSalesInfo}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -242,7 +284,17 @@ function Dashboard() {
       </GridContainer> */}
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
-          <DataTable data={item} onChangeDataTable={onChangeFunc} />
+          <Card>
+            <CardHeader color="primary">
+              <h4 className={classes.cardTitleWhite}>Genel Siparis Tablosu</h4>
+              <p className={classes.cardCategoryWhite}>
+                Tüm siparislerinizi organize edin
+              </p>
+            </CardHeader>
+            <CardBody>
+              <DataTable data={item} onChangeDataTable={onChangeFunc} />
+            </CardBody>
+          </Card>
         </GridItem>
       </GridContainer>
 

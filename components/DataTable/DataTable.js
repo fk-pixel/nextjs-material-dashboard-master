@@ -57,7 +57,7 @@ export default function BasicEditingGrid(props) {
 
   const onUpload = (e, row) => {
     e.stopPropagation();
-    //do whatever you want with the row
+
     alert(
       `Ürün kimligi: ${row.id} ve ürün bilgisi: ${row.title}, ${row.price} olan yeni bir icerik yükleyiniz.`
     );
