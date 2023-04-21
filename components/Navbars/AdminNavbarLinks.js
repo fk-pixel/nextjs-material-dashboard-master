@@ -21,12 +21,16 @@ import Button from "components/CustomButtons/Button.js";
 import useWindowSize from "components/Hooks/useWindowSize.js";
 
 import styles from "assets/jss/nextjs-material-dashboard/components/headerLinksStyle.js";
+import { useRouter } from "next/router";
 
 export default function AdminNavbarLinks(props) {
   const { isDashboard } = props;
   const size = useWindowSize();
   const useStyles = makeStyles(styles);
   const classes = useStyles();
+
+  const router = useRouter();
+
   const [openNotification, setOpenNotification] = React.useState(null);
   const [openProfile, setOpenProfile] = React.useState(null);
   const [openDateRange, setOpenDateRange] = React.useState(null);
@@ -53,6 +57,14 @@ export default function AdminNavbarLinks(props) {
 
   const handleCloseProfile = () => {
     setOpenProfile(null);
+  };
+
+  const handleProfile = () => {
+    router.push("/admin/user-profile");
+  };
+
+  const handleLogout = () => {
+    router.push("/auth/signin");
   };
 
   const handleClickDateRange = (event) => {
@@ -274,20 +286,20 @@ export default function AdminNavbarLinks(props) {
                 <ClickAwayListener onClickAway={handleCloseProfile}>
                   <MenuList role="menu">
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      onClick={handleProfile}
                       className={classes.dropdownItem}
                     >
-                      Profile
+                      Profil
                     </MenuItem>
                     <MenuItem
                       onClick={handleCloseProfile}
                       className={classes.dropdownItem}
                     >
-                      Settings
+                      Ayarlar
                     </MenuItem>
                     <Divider light />
                     <MenuItem
-                      onClick={handleCloseProfile}
+                      onClick={handleLogout}
                       className={classes.dropdownItem}
                     >
                       Logout

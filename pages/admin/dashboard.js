@@ -1,44 +1,41 @@
 import React from "react";
-// react plugin for creating charts
-import ChartistGraph from "react-chartist";
-// @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
-// @material-ui/icons
-import Store from "@material-ui/icons/Store";
-import Warning from "@material-ui/icons/Warning";
-import DateRange from "@material-ui/icons/DateRange";
-import LocalOffer from "@material-ui/icons/LocalOffer";
-import Update from "@material-ui/icons/Update";
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
-import AccessTime from "@material-ui/icons/AccessTime";
-import Accessibility from "@material-ui/icons/Accessibility";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
-import Cloud from "@material-ui/icons/Cloud";
-// layout for this page
+import {
+  Store,
+  Update,
+  Warning,
+  DateRange,
+  LocalOffer,
+  ArrowUpward,
+  AccessTime,
+  Accessibility,
+  BugReport,
+  Code,
+  Cloud,
+} from "@material-ui/icons";
+
 import Admin from "layouts/Admin.js";
-// core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
 import DataTable from "components/DataTable/DataTable.js";
-import Tasks from "components/Tasks/Tasks.js";
-import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import Danger from "components/Typography/Danger.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
-import { bugs, website, server } from "variables/general.js";
-
-import {
-  dailySalesChart,
-  emailsSubscriptionChart,
-  completedTasksChart,
-} from "variables/charts.js";
+// import ChartistGraph from "react-chartist";
+// import Table from "components/Table/Table.js";
+// import Tasks from "components/Tasks/Tasks.js";
+// import CustomTabs from "components/CustomTabs/CustomTabs.js";
+// import Danger from "components/Typography/Danger.js";
+// import { bugs, website, server } from "variables/general.js";
+// import {
+//   dailySalesChart,
+//   emailsSubscriptionChart,
+//   completedTasksChart,
+// } from "variables/charts.js";
 
 import styles from "assets/jss/nextjs-material-dashboard/views/dashboardStyle.js";
 
@@ -46,71 +43,72 @@ function Dashboard() {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
   const [item, setItem] = React.useState([]);
-  const [infos, setInfos] = React.useState({
-    quantityCardInfo: 0,
-    salesCardInfo: 0,
-    ruloSalesInfo: 0,
-    panelSalesInfo: 0,
-  });
+  const [user, setUser] = React.useState({});
 
   React.useEffect(() => {
-    if (JSON.parse(localStorage.getItem("orders")) !== undefined) {
-      setItem(JSON.parse(localStorage.getItem("orders")));
+    const ISSERVER = typeof window === "undefined";
+
+    if (!ISSERVER) {
+      const orders = JSON.parse(localStorage.getItem("orders"));
+
+      if (orders) {
+        setItem(orders);
+      }
+
+      const userData = JSON.parse(localStorage.getItem("userData"));
+
+      if (userData) {
+        setUser(userData);
+      }
     }
   }, []);
 
-  // React.useEffect(() => {
-  //   if (item !== null && item !== undefined) {
-  //     const quantityCardInfo = item.length;
+  const quantityCardInfo =
+    item !== null && item.length > 0
+      ? user !== null || user !== undefined
+        ? user.role === "admin"
+          ? item.length
+          : item.filter((x) => x.createdBy === user.username).length
+        : 0
+      : 0;
 
-  //     const salesCardInfo = item
-  //       .map((x) => (x.price !== undefined ? x.price : null))
-  //       .reduce((acc, val) => acc + Math.round(val), 0);
+  const salesCardInfo =
+    item !== null && item.length > 0
+      ? user !== null || user !== undefined
+        ? user.role === "admin"
+          ? item
+              .map((x) => (x.price !== undefined ? x.price : null))
+              .reduce((acc, val) => acc + Math.round(val), 0)
+          : item
+              .filter((x) => x.createdBy === user.username)
+              .map((x) => (x.price !== undefined ? x.price : null))
+              .reduce((acc, val) => acc + Math.round(val), 0)
+        : 0
+      : 0;
 
-  //     const ruloSalesInfo = item.filter(
-  //       (x) => x.productMainType === "Rulo"
-  //     ).length;
+  const ruloSalesInfo =
+    item !== null && item.length > 0
+      ? user !== null || user !== undefined
+        ? user.role === "admin"
+          ? item.filter((x) => x.productMainType === "Rulo").length
+          : item
+              .filter((x) => x.createdBy === user.username)
+              .filter((x) => x.productMainType === "Rulo").length
+        : 0
+      : 0;
 
-  //     const panelSalesInfo = item.filter(
-  //       (x) => x.productMainType === "Panel"
-  //     ).length;
+  const panelSalesInfo =
+    item !== null && item.length > 0
+      ? user !== null || user !== undefined
+        ? user.role === "admin"
+          ? item.filter((x) => x.productMainType === "Panel").length
+          : item
+              .filter((x) => x.createdBy === user.username)
+              .filter((x) => x.productMainType === "Panel").length
+        : 0
+      : 0;
 
-  //     setInfos({
-  //       quantityCardInfo,
-  //       salesCardInfo,
-  //       ruloSalesInfo,
-  //       panelSalesInfo,
-  //     });
-  //   }
-  // }, [infos]);
-
-  const quantityCardInfo = item.length;
-
-  const salesCardInfo = item
-    .map((x) => (x.price !== undefined ? x.price : null))
-    .reduce((acc, val) => acc + Math.round(val), 0);
-
-  const ruloSalesInfo = item.filter((x) => x.productMainType === "Rulo").length;
-
-  const panelSalesInfo = item.filter(
-    (x) => x.productMainType === "Panel"
-  ).length;
-  // React.useCallback(() => {
-  //   if (item !== null && item !== undefined) {
-  //     setInfos({
-  //       quantityCardInfo,
-  //       salesCardInfo,
-  //       ruloSalesInfo,
-  //       panelSalesInfo,
-  //     });
-  //     //return { quantityCardInfo, salesCardInfo, ruloSalesInfo, panelSalesInfo };
-  //   }
-  // }, [item]);
-
-  // const { quantityCardInfo, salesCardInfo, ruloSalesInfo, panelSalesInfo } =
-  //   getCardInformations();
-
-  function onChangeFunc() {
+  function onChangeDashboard() {
     setItem(JSON.parse(localStorage.getItem("orders")));
   }
 
@@ -285,7 +283,11 @@ function Dashboard() {
               </p>
             </CardHeader>
             <CardBody>
-              <DataTable data={item} onChangeDataTable={onChangeFunc} />
+              <DataTable
+                data={item}
+                userData={user}
+                onChangeDataTable={onChangeDashboard}
+              />
             </CardBody>
           </Card>
         </GridItem>

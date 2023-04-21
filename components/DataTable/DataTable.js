@@ -2,7 +2,7 @@ import * as React from "react";
 import { useRouter, Router } from "next/router";
 
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
-import { Button, Box, Tooltip, Avatar } from "@mui/material";
+import { Button, Box, Tooltip, Avatar, Chip } from "@mui/material";
 import FileUpload from "@mui/icons-material/FileUpload";
 import Save from "@mui/icons-material/Save";
 import Add from "@mui/icons-material/Add";
@@ -19,6 +19,12 @@ import {
   randomUpdatedDate,
   randomUserName,
 } from "@mui/x-data-grid-generator";
+import {
+  PANELTYPE_OPTIONS,
+  PRODUCTMAINTYPE_OPTIONS,
+  ROLLTYPE_OPTIONS,
+  SHIPPING_OPTIONS,
+} from "../../pages/admin/order-form.js";
 
 let idCounter = 1;
 const createRandomRow = () => {
@@ -30,30 +36,9 @@ const createRandomRow = () => {
 // var getItems2 = window.localStorage.getItem("orders");
 
 export default function BasicEditingGrid(props) {
-  const { data, onChangeDataTable } = props;
+  const { data, userData, onChangeDataTable } = props;
 
   var newData = getDataWithAvatar(data);
-
-  // const data = [
-  //   {
-  //     id: 1,
-  //     title: traderName,
-  //     price: 25,
-  //     quantity: randomQuantity(),
-  //     saleDate: randomCreatedDate(), //moment(randomCreatedDate(), "YYYY-MM-DD"),
-  //     gift: randomAddress(),
-  //     avatar: shortcut,
-  //     status: "🟡 Üretime gönderildi",
-  //     createdDate: new Date(),
-  //   },
-  // ];
-
-  // const [rows, setRows] = React.useState(newData);
-  // const [rows, setRows] = React.useState(() => getItems);
-
-  // const handleAddRow = () => {
-  //   setRows((data) => [...data, createRandomRow()]);
-  // };
 
   const onUpload = (e, row) => {
     e.stopPropagation();
@@ -79,8 +64,8 @@ export default function BasicEditingGrid(props) {
     const editedData = {
       id: row.id,
       number: row.number,
-      company: "dowiedo",
-      username: "fk2534",
+      store: row.store,
+      username: row.username,
       product: row.product,
       productSize: row.size,
       productSizeWidth: null,
@@ -104,7 +89,7 @@ export default function BasicEditingGrid(props) {
       status: row.status,
       price: row.price,
       createdDate: row.createdDate,
-      createdBy: "fk2534",
+      createdBy: row.createdBy,
     };
 
     const afterEditData = localStorage.setItem(
@@ -125,6 +110,67 @@ export default function BasicEditingGrid(props) {
     onChangeDataTable(afterRemoveData);
   };
 
+  // const user = JSON.parse(localStorage.getItem("userData"));
+  // const userData = localStorage.getItem("userData");
+
+  function getChipProps(params) {
+    if (params.value === "RED") {
+      return {
+        icon: <WarningIcon style={{ fill: red[500] }} />,
+        label: params.value,
+        style: {
+          borderColor: red[500],
+        },
+      };
+    } else {
+      return {
+        icon: <CheckCircleIcon style={{ fill: blue[500] }} />,
+        label: params.value,
+        style: {
+          borderColor: blue[500],
+        },
+      };
+    }
+  }
+
+  function getOptionProps(params) {
+    if (params.value === "RED") {
+      return {
+        icon: <WarningIcon style={{ fill: red[500] }} />,
+        label: params.value,
+        style: {
+          borderColor: red[500],
+        },
+      };
+    } else {
+      return {
+        icon: <CheckCircleIcon style={{ fill: blue[500] }} />,
+        label: params.value,
+        style: {
+          borderColor: blue[500],
+        },
+      };
+    }
+  }
+  // TODO: localstorage datasi sadece üst compoenenten gelsin yani datatablein kullanidigi mesela dashboard sayfasinda bunu hallet
+
+  const dataByRole =
+    userData !== null || userData !== undefined
+      ? userData?.role === "admin"
+        ? newData
+        : getDataByUser()
+      : {};
+
+  function getDataByUser() {
+    return newData !== undefined
+      ? newData.filter((x) => x.createdBy === userData.username)
+      : [];
+  }
+
+  // React.useEffect(() => {
+  //   const user = localStorage.getItem("userData");
+  // }, []);
+
   const columns = [
     { field: "id", headerName: "ID", width: 50, editable: false },
     {
@@ -142,7 +188,7 @@ export default function BasicEditingGrid(props) {
       },
     },
     {
-      field: "company",
+      field: "store",
       headerName: "Magaza",
       // width: 100,
       editable: true,
@@ -165,18 +211,68 @@ export default function BasicEditingGrid(props) {
       headerName: "Ürün Ana Tipi",
       // width: 100,
       editable: true,
+      renderEditCell: (params) => {
+        return (
+          <AutocompleteEditCell
+            {...params}
+            value={params.row.productMainType}
+            options={PRODUCTMAINTYPE_OPTIONS}
+            getOptionLabel={(o) => o.label || ""}
+            freeSolo={true}
+            autoHighlight={false}
+            multiple={false}
+            disableClearable={true}
+          />
+        );
+      },
     },
     {
       field: "productSubType",
       headerName: "Ürün Alt Tipi",
       // width: 100,
       editable: true,
+      renderEditCell: (params, onChange) => {
+        return (
+          <AutocompleteEditCell
+            {...params}
+            value={params.row.productSubType}
+            options={[...PANELTYPE_OPTIONS, ...ROLLTYPE_OPTIONS]}
+            getOptionLabel={(o) => o.label || ""}
+            freeSolo={true}
+            autoHighlight={false}
+            multiple={false}
+            disableClearable={true}
+          />
+        );
+      },
+      // renderCell: (params) => {
+      //   return (
+      //     <Chip
+      //       variant="outlined"
+      //       color="primary" /* {...getChipProps(params)} */
+      //     />
+      //   );
+      // },
     },
     {
       field: "productCargoType",
       headerName: "Ürün Kargo Tipi",
       // width: 100,
       editable: true,
+      renderEditCell: (params) => {
+        return (
+          <AutocompleteEditCell
+            {...params}
+            value={params.row.productCargoType}
+            options={SHIPPING_OPTIONS}
+            getOptionLabel={(o) => o.label || ""}
+            freeSolo={true}
+            autoHighlight={false}
+            multiple={false}
+            disableClearable={true}
+          />
+        );
+      },
     },
     {
       field: "gift1",
@@ -338,7 +434,7 @@ export default function BasicEditingGrid(props) {
         <DataGrid
           showCellVerticalBorder
           getRowId={(row) => row.id}
-          rows={newData ?? []}
+          rows={dataByRole ?? []}
           columns={columns}
           // pageSize={25}
           rowsPerPageOptions={[25]}
@@ -446,3 +542,24 @@ const [veggie, setVeggie] = useState();
 
 
 */
+
+// const data = [
+//   {
+//     id: 1,
+//     title: traderName,
+//     price: 25,
+//     quantity: randomQuantity(),
+//     saleDate: randomCreatedDate(), //moment(randomCreatedDate(), "YYYY-MM-DD"),
+//     gift: randomAddress(),
+//     avatar: shortcut,
+//     status: "🟡 Üretime gönderildi",
+//     createdDate: new Date(),
+//   },
+// ];
+
+// const [rows, setRows] = React.useState(newData);
+// const [rows, setRows] = React.useState(() => getItems);
+
+// const handleAddRow = () => {
+//   setRows((data) => [...data, createRandomRow()]);
+// };

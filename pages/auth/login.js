@@ -1,16 +1,19 @@
 import React from "react";
 import Link from "next/link";
-
 import { makeStyles } from "@material-ui/core/styles";
 
+import Auth from "layouts/Auth.js";
+
+// import Admin from "layouts/Auth.js";
+import { Button, Stack, Box } from "@mui/material";
 const styles = {
   mainDiv: {
-    width: "100%",
+    width: "50%",
     paddingLeft: "1rem",
     paddingRight: "1rem",
     marginLeft: "auto",
     marginRight: "auto",
-    height: "100%",
+    height: "50%",
   },
   mainDiv2: {
     display: "flex",
@@ -20,8 +23,8 @@ const styles = {
     height: "100%",
   },
   mainDiv3: {
-    paddingLeft: "1rem",
-    paddingRight: "1rem",
+    paddingLeft: 6,
+    paddingRight: 6,
     width: "100%",
     // @media (minWidth: "1024px) {
     //   width",
@@ -116,12 +119,16 @@ const styles = {
     marginTop: "1.5rem",
   },
   contentDiv: {
-    paddingLeft: "1rem",
-    paddingRight: "1rem",
-    paddingTop: "2.5rem",
-    paddingBottom: "2.5rem",
-    paddingTop: "0",
-    flex: "1 1 auto",
+    padding: 12,
+    marginLeft: 6,
+    marginRight: 12,
+    position: "relative",
+    // paddingLeft: "1rem",
+    // paddingRight: "1rem",
+    // paddingTop: "2.5rem",
+    // paddingBottom: "2.5rem",
+    // paddingTop: "0",
+    // flex: "1 1 auto",
     // @media (minWidth: "1024px) {
     //   padding-left",
     // paddingRight: "2.5rem",
@@ -131,11 +138,10 @@ const styles = {
     fontWeight: "700",
     textAlign: "center",
   },
-  contentDiv: {
-    position: "relative",
-    marginBottom: "0.75rem",
-    width: "100%",
-  },
+  // contentDiv: {
+  //   marginBottom: "0.75rem",
+  //   width: "100%",
+  // },
   contentLabel: {
     display: "block",
     marginBottom: "0.5rem",
@@ -198,7 +204,7 @@ const styles = {
     transitionDuration: "150ms",
     transitionTimingFunction: "linear",
     color: "#ffffff",
-    backgroundColor: "rgb(23 37 84)",
+    // backgroundColor: "rgb(23 37 84)",
     fontSize: "0.875rem",
     lineHeight: "1.25rem",
     fontWeight: "700",
@@ -232,14 +238,12 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-import Auth from "layouts/Auth.js";
-
-export default function Login() {
+export function Login() {
   const classes = useStyles();
 
   return (
     <>
-      <div
+      <Box
         //   className="container mx-auto px-4 h-full"
         className={classes.mainDiv}
       >
@@ -270,37 +274,44 @@ export default function Login() {
                     Sign in with
                   </h6>
                 </div>
-                <div
-                  // className="btn-wrapper text-center"
-                  className={classes.imageSignin}
-                >
-                  <button
-                    // className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
-                    className={classes.buttonGithub}
-                    type="button"
+                <Box style={{ alignItems: "center", justifyContent: "center" }}>
+                  <Stack
+                    direction={"row"}
+                    spacing={2}
+                    // className="btn-wrapper text-center"
+                    //className={classes.imageSignin}
                   >
-                    <img
-                      alt="..."
-                      // className="w-5 mr-1"
-                      className={classes.imageSiginIcon}
-                      src="assets/img/github.svg"
-                    />
-                    Github
-                  </button>
-                  <button
-                    // className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
-                    className={classes.buttonGoogle}
-                    type="button"
-                  >
-                    <img
-                      alt="..."
-                      // className="w-5 mr-1"
-                      className={classes.imageSiginIcon}
-                      src="/img/google.png"
-                    />
-                    Google
-                  </button>
-                </div>
+                    <Button
+                      // className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
+                      className={classes.buttonGithub}
+                      variant={"contained"}
+                      // type="button"
+                    >
+                      <img
+                        alt="..."
+                        // className="w-5 mr-1"
+                        // className={classes.imageSiginIcon}
+                        src="assets/img/github.svg"
+                      />
+                      Github
+                    </Button>
+                    <Button
+                      // className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
+                      // className={classes.buttonGoogle}
+                      variant={"contained"}
+                    >
+                      <img
+                        alt="..."
+                        // className="w-5 mr-1"
+                        // className={classes.imageSiginIcon}
+                        src="assets/img/sidebar-1.jpg"
+                        width={42}
+                        height={6}
+                      />
+                      Google
+                    </Button>
+                  </Stack>
+                </Box>
                 <hr
                   // className="mt-6 border-b-1 border-blueGray-300"
                   className={classes.underLine}
@@ -423,9 +434,11 @@ export default function Login() {
             </div>
           </div>
         </div>
-      </div>
+      </Box>
     </>
   );
 }
 
 Login.layout = Auth;
+
+export default Login;

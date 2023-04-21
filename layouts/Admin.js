@@ -22,24 +22,27 @@ import { Tooltip } from "@mui/material";
 let ps;
 
 export default function Admin({ children, ...rest }) {
-  // used for checking current route
   const router = useRouter();
-  // styles
+
   const useStyles = makeStyles(styles);
   const classes = useStyles();
+
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
-  // states and functions
+
   const [image, setImage] = React.useState(bgImage);
   const [color, setColor] = React.useState("white");
   const [fixedClasses, setFixedClasses] = React.useState("dropdown hidden");
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
   const handleImageClick = (image) => {
     setImage(image);
   };
+
   const handleColorClick = (color) => {
     setColor(color);
   };
+
   const handleFixedClick = () => {
     if (fixedClasses === "dropdown") {
       setFixedClasses("dropdown show");
@@ -47,17 +50,21 @@ export default function Admin({ children, ...rest }) {
       setFixedClasses("dropdown");
     }
   };
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
   const getRoute = () => {
     return router.pathname !== "/admin/maps";
   };
+
   const resizeFunction = () => {
     if (window.innerWidth >= 960) {
       setMobileOpen(false);
     }
   };
+
   // initialize and destroy the PerfectScrollbar plugin
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -76,6 +83,7 @@ export default function Admin({ children, ...rest }) {
       window.removeEventListener("resize", resizeFunction);
     };
   }, [mainPanel]);
+
   return (
     <div className={classes.wrapper}>
       <Sidebar

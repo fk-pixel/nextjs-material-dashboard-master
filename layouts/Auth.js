@@ -1,8 +1,11 @@
 import React from "react";
+import { useRouter } from "next/router";
 import { makeStyles } from "@material-ui/core/styles";
 
-import Navbar from "components/Navbars/AuthNavbar.js";
-import FooterSmall from "components/Footer/FooterSmall.js";
+import routes from "routes.js";
+import Navbar from "components/Navbars/Navbar.js";
+// import FooterSmall from "components/Footer/FooterSmall.js";
+import imagine4 from "assets/img/bgNew.svg";
 
 const styles = {
   section: {
@@ -21,28 +24,40 @@ const styles = {
     height: "100%",
   },
 };
-const useStyles = makeStyles(styles);
 
-export default function Auth({ children }) {
+export default function Auth({ children, ...rest }) {
+  // const router = useRouter();
+
+  const useStyles = makeStyles(styles);
   const classes = useStyles();
+
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   return (
     <>
-      <Navbar transparent />
+      {/* <Navbar
+        transparent
+        routes={routes}
+        handleDrawerToggle={handleDrawerToggle}
+        {...rest}
+      /> */}
       <main>
-        <section
-          // className="relative w-full h-full py-40 min-h-screen"
-          className={classes.section}
-        >
+        <section className={classes.section}>
           <div
-            // className="absolute top-0 w-full h-full bg-blueGray-800 bg-no-repeat bg-full"
             className={classes.loginDiv}
             style={{
-              backgroundImage: "url('/img/register_bg_2.png')",
+              backgroundImage: `url(${imagine4})`,
+              backgroundSize: "cover" /* <------ */,
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center center",
             }}
           ></div>
           {children}
-          <FooterSmall absolute />
+          {/* <FooterSmall absolute /> */}
         </section>
       </main>
     </>

@@ -29,7 +29,7 @@ import Notifications from "@material-ui/icons/Notifications";
 import Unarchive from "@material-ui/icons/Unarchive";
 import Language from "@material-ui/icons/Language";
 
-const dashboardRoutes = [
+const routes = [
   {
     path: "/dashboard",
     name: "Dashboard",
@@ -54,6 +54,22 @@ const dashboardRoutes = [
 
     layout: "/admin",
   },
+  // {
+  //   path: "/login",
+  //   name: "Login",
+  //   rtlName: "ل",
+  //   icon: Person,
+
+  //   layout: "/auth",
+  // },
+  // {
+  //   path: "/register",
+  //   name: "Register",
+  //   rtlName: "ة",
+  //   icon: Person,
+
+  //   layout: "/auth",
+  // },
 
   // {
   //   path: "/table-list",
@@ -113,23 +129,4 @@ const dashboardRoutes = [
   // },
 ];
 
-export default dashboardRoutes;
-
-export const authRoutes = [
-  {
-    path: "/login",
-    name: "Login",
-    rtlName: "ل",
-    icon: LoginIcon,
-
-    layout: "/auth",
-  },
-  {
-    path: "/register",
-    name: "Register",
-    rtlName: "ة",
-    icon: AppRegistrationIcon,
-
-    layout: "/auth",
-  },
-];
+export default routes;

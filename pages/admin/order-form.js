@@ -81,24 +81,24 @@ function selectShippingOptions(mainOption) {
   }
 }
 
-const PRODUCTMAINTYPE_OPTIONS = [
+export const PRODUCTMAINTYPE_OPTIONS = [
   { id: "panel", label: "Panel" },
   { id: "roll", label: "Rulo" },
   { id: "glas", label: "Cam" },
 ];
 
-const PANELTYPE_OPTIONS = [
+export const PANELTYPE_OPTIONS = [
   { id: "thinHoop", label: "Ince Kasnak" },
   { id: "normalHoop", label: "Normal Kasnak" },
 ];
 
-const ROLLTYPE_OPTIONS = [
+export const ROLLTYPE_OPTIONS = [
   { id: "normalRoll", label: "Normal Rulo" },
   { id: "NonReflectiveRoll", label: "Yansimasiz Rulo" },
   { id: "coatedPaper", label: "Kuse Kagit" },
 ];
 
-const SHIPPING_OPTIONS = [
+export const SHIPPING_OPTIONS = [
   { id: "singlePanel", label: "Single Panel" },
   { id: "twoPanels", label: "Two Panels" },
   { id: "threePanels", label: "Three Panels" },
@@ -116,8 +116,8 @@ function OrderForm() {
   const [orderState, setOrderState] = React.useState({
     id: uuidv4(),
     number: uniqueId(),
-    company: "dowiedo",
-    username: "fk2534",
+    store: "",
+    username: "",
     product: "",
     productSize: "",
     productSizeWidth: null,
@@ -141,7 +141,7 @@ function OrderForm() {
     status: null,
     price: null,
     createdDate: new Date(),
-    createdBy: "fk2534",
+    createdBy: "",
   });
 
   function handleSubmit(e) {
@@ -163,6 +163,9 @@ function OrderForm() {
         gift2SizeWidth,
         gift2SizeHeight,
         id,
+        username,
+        store,
+        createdBy,
         ...rest
       } = orderState;
 
@@ -184,6 +187,9 @@ function OrderForm() {
           gift2SizeWidth !== null || gift2SizeHeight !== null
             ? gift2SizeWidth + "x" + gift2SizeHeight
             : null,
+        username: JSON.parse(localStorage.getItem("userData")).username,
+        store: JSON.parse(localStorage.getItem("userData")).store,
+        createdBy: JSON.parse(localStorage.getItem("userData")).username,
       };
 
       localStorage.setItem("orders", JSON.stringify([...orders, ordersState]));
