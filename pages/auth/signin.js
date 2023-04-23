@@ -29,12 +29,6 @@ export default function SignIn() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // const form = document.getElementById("form");
-    // const submitter = document.querySelector("button[value=save]");
-    // const formData = new FormData(form, submitter);
-
-    const formData = new FormData(event.currentTarget);
-
     const users = JSON.parse(localStorage.getItem("users"));
     const user =
       users !== null ? users.find((x) => x.email === loginState.email) : {};
