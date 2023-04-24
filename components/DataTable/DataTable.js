@@ -152,24 +152,21 @@ export default function BasicEditingGrid(props) {
       };
     }
   }
-  // TODO: localstorage datasi sadece üst compoenenten gelsin yani datatablein kullanidigi mesela dashboard sayfasinda bunu hallet
 
-  const dataByRole =
-    userData !== null || userData !== undefined
-      ? userData?.role === "admin"
-        ? newData
-        : getDataByUser()
-      : {};
-
-  function getDataByUser() {
+  function getNewDataByUser() {
     return newData !== undefined
       ? newData.filter((x) => x.createdBy === userData.username)
       : [];
   }
 
-  // React.useEffect(() => {
-  //   const user = localStorage.getItem("userData");
-  // }, []);
+  const newDataByUser = getNewDataByUser();
+
+  const dataByRole =
+    userData !== null || userData !== undefined
+      ? userData?.role === "admin"
+        ? newData
+        : newDataByUser
+      : {};
 
   const columns = [
     { field: "id", headerName: "ID", width: 50, editable: false },

@@ -21,6 +21,7 @@ const theme = createTheme();
 
 export default function SignIn() {
   const router = useRouter();
+
   const [loginState, setLoginState] = React.useState({
     email: "",
     password: "",
@@ -49,6 +50,7 @@ export default function SignIn() {
           logged: true,
           role: user.role,
           profilePhoto: null,
+          password: user.password,
         })
       );
     } else {
@@ -154,7 +156,7 @@ export default function SignIn() {
                     },
                   }}
                 >
-                  Forgot password?
+                  Sifremi unuttum
                 </Link>
               </Grid>
               <Grid item style={{ marginTop: 12, marginBottom: 24 }}>
@@ -168,7 +170,7 @@ export default function SignIn() {
                     },
                   }}
                 >
-                  {"Don't have an account? Sign Up"}
+                  {"Hesabiniz yoksa bir hesap olusturun"}
                 </Link>
               </Grid>
             </Grid>

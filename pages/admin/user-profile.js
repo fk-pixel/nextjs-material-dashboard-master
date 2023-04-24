@@ -39,49 +39,78 @@ const styles = {
 function UserProfile() {
   const useStyles = makeStyles(styles);
   const classes = useStyles();
+  const [userProfile, setUserProfile] = React.useState({});
+
+  React.useEffect(() => {
+    const ISSERVER = typeof window === "undefined";
+
+    if (!ISSERVER) {
+      const userData = JSON.parse(localStorage.getItem("userData"));
+
+      if (userData) {
+        setUserProfile(userData);
+      }
+    }
+  }, []);
+
   return (
     <div>
       <GridContainer>
         <GridItem xs={12} sm={12} md={8}>
           <Card>
             <CardHeader color="primary">
-              <h4 className={classes.cardTitleWhite}>Edit Profile</h4>
-              <p className={classes.cardCategoryWhite}>Complete your profile</p>
+              <h4 className={classes.cardTitleWhite}>Profili Düzenle</h4>
             </CardHeader>
             <CardBody>
               <GridContainer>
-                <GridItem xs={12} sm={12} md={5}>
+                <GridItem xs={12} sm={12} md={6}>
                   <TextInput
-                    labelText="Company (disabled)"
-                    id="company-disabled"
+                    labelText="Magaza"
+                    id="store"
                     formControlProps={{
                       fullWidth: true,
                     }}
+                    value={userProfile.store}
                     inputProps={{
                       disabled: true,
                     }}
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={3}>
+                <GridItem xs={12} sm={12} md={6}>
                   <TextInput
-                    labelText="Username"
+                    labelText="Kullanici"
                     id="username"
+                    value={userProfile.username}
+                    inputProps={{
+                      disabled: true,
+                    }}
                     formControlProps={{
                       fullWidth: true,
                     }}
                   />
                 </GridItem>
-                <GridItem xs={12} sm={12} md={4}>
+                <GridItem xs={12} sm={12} md={6}>
                   <TextInput
-                    labelText="Email address"
-                    id="email-address"
+                    labelText="Email adresi"
+                    id="email"
+                    value={userProfile.email}
+                    formControlProps={{
+                      fullWidth: true,
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={6}>
+                  <TextInput
+                    labelText="Parola"
+                    id="password"
+                    value={userProfile.password}
                     formControlProps={{
                       fullWidth: true,
                     }}
                   />
                 </GridItem>
               </GridContainer>
-              <GridContainer>
+              {/* <GridContainer>
                 <GridItem xs={12} sm={12} md={6}>
                   <TextInput
                     labelText="First Name"
@@ -129,10 +158,10 @@ function UserProfile() {
                     }}
                   />
                 </GridItem>
-              </GridContainer>
-              <GridContainer>
+              </GridContainer> */}
+              {/* <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
-                  <InputLabel style={{ color: "#AAAAAA" }}>About me</InputLabel>
+                  <InputLabel style={{ color: "#AAAAAA" }}>Hakkimda</InputLabel>
                   <TextInput
                     labelText="Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo."
                     id="about-me"
@@ -145,10 +174,10 @@ function UserProfile() {
                     }}
                   />
                 </GridItem>
-              </GridContainer>
+              </GridContainer> */}
             </CardBody>
             <CardFooter>
-              <Button color="primary">Update Profile</Button>
+              <Button color="primary">Profili Güncelle</Button>
             </CardFooter>
           </Card>
         </GridItem>
@@ -160,15 +189,11 @@ function UserProfile() {
               </a>
             </CardAvatar>
             <CardBody profile>
-              <h6 className={classes.cardCategory}>CEO / CO-FOUNDER</h6>
-              <h4 className={classes.cardTitle}>Alec Thompson</h4>
-              <p className={classes.description}>
-                Don{"'"}t be scared of the truth because we need to restart the
-                human foundation in truth And I love you like Kanye loves Kanye
-                I love Rick Owens’ bed design but the back is...
-              </p>
+              <h6 className={classes.cardCategory}>Card / USER</h6>
+              <h4 className={classes.cardTitle}>Avatar</h4>
+              <p className={classes.description}>...</p>
               <Button color="primary" round>
-                Follow
+                Bildir{" "}
               </Button>
             </CardBody>
           </Card>
