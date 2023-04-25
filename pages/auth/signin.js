@@ -170,7 +170,7 @@ export default function SignIn() {
                     },
                   }}
                 >
-                  {"Hesabiniz yoksa bir hesap olusturun"}
+                  {"Yeni bir hesap olustur"}
                 </Link>
               </Grid>
             </Grid>
