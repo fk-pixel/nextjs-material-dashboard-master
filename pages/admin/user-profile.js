@@ -1,6 +1,7 @@
 import React from "react";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+import { Avatar } from "@mui/material";
 import InputLabel from "@material-ui/core/InputLabel";
 // layout for this page
 import Admin from "layouts/Admin.js";
@@ -15,7 +16,7 @@ import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
-import avatar from "assets/img/faces/marc.jpg";
+import avatar from "assets/img/default-avatar.png";
 
 const styles = {
   cardCategoryWhite: {
@@ -187,6 +188,13 @@ function UserProfile() {
               <a href="#pablo" onClick={(e) => e.preventDefault()}>
                 <img src={avatar} alt="..." />
               </a>
+              {/* <Avatar
+                sizes="25px"
+                sx={{ bgcolor: "warning.main" }}
+                alt="user-profile"
+              >
+                {userProfile.username}
+              </Avatar> */}
             </CardAvatar>
             <CardBody profile>
               <h6 className={classes.cardCategory}>Card / USER</h6>
