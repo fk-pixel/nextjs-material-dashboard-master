@@ -334,7 +334,7 @@ function OrderForm() {
                   </GridItem>
                   <GridItem xs={12} sm={12} md={6}>
                     <TextInput
-                      labelText="Yönetici"
+                      labelText="Kullanici"
                       id="username"
                       value={userData.username}
                       formControlProps={{
