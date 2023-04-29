@@ -17,9 +17,11 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import { FileUpload } from "components/FileUpload/FileUpload.js";
 // import AutocompleteEditCell from "components/AutocompleteEditCell/AutocompleteEditCell.js";
-import { Autocomplete, FormControl, TextField } from "@mui/material";
+import { Autocomplete, FormControl, TextField, Tooltip } from "@mui/material";
+import FileDownload from "@mui/icons-material/FileDownload";
+import Button from "components/CustomButtons/Button.js";
 
-import { Button, Box } from "@mui/material";
+import { Button as MButton, Box } from "@mui/material";
 import avatar from "assets/img/faces/marc.jpg";
 import AutocompleteForm from "../../components/Autocomplete/AutocompleteForm";
 import TextForm from "../../components/TextForm/TextForm";
@@ -113,12 +115,17 @@ function OrderForm() {
 
   const classes = useStyles();
 
+  const fileInputProduct = React.useRef(null);
+  const fileInputGift1 = React.useRef(null);
+  const fileInputGift2 = React.useRef(null);
+
   const [orderState, setOrderState] = React.useState({
     id: uuidv4(),
     number: uniqueId(),
     store: "",
     username: "",
     product: "",
+    productFile: "",
     productSize: "",
     productSizeWidth: null,
     productSizeHeight: null,
@@ -126,10 +133,12 @@ function OrderForm() {
     productSubType: "",
     productCargoType: "",
     gift1: "",
+    gift1File: "",
     gift1Size: "",
     gift1SizeWidth: null,
     gift1SizeHeight: null,
     gift2: "",
+    gift2File: "",
     gift2Size: "",
     gift2SizeWidth: null,
     gift2SizeHeight: null,
@@ -143,6 +152,14 @@ function OrderForm() {
     createdDate: new Date(),
     createdBy: "",
   });
+
+  function getUserData() {
+    const ISSERVER = typeof window === "undefined";
+
+    return !ISSERVER ? JSON.parse(localStorage.getItem("userData")) : {};
+  }
+
+  const userData = getUserData();
 
   function handleSubmit(e) {
     // e.preventDefault();
@@ -172,30 +189,58 @@ function OrderForm() {
       const newID =
         orders.find((x) => x.id === id) !== undefined ? uuidv4() : id;
 
-      const ordersState = {
+      const orderState = {
         ...rest,
         id: newID,
         productSize:
           productSizeWidth !== null || productSizeHeight !== null
-            ? productSizeWidth + "x" + productSizeHeight
+            ? productSizeWidth + "*" + productSizeHeight
             : null,
         gift1Size:
           gift1SizeWidth !== null || gift1SizeHeight !== null
-            ? gift1SizeWidth + "x" + gift1SizeHeight
+            ? gift1SizeWidth + "*" + gift1SizeHeight
             : null,
         gift2Size:
           gift2SizeWidth !== null || gift2SizeHeight !== null
-            ? gift2SizeWidth + "x" + gift2SizeHeight
+            ? gift2SizeWidth + "*" + gift2SizeHeight
             : null,
         username: JSON.parse(localStorage.getItem("userData")).username,
         store: JSON.parse(localStorage.getItem("userData")).store,
         createdBy: JSON.parse(localStorage.getItem("userData")).username,
       };
 
-      localStorage.setItem("orders", JSON.stringify([...orders, ordersState]));
+      localStorage.setItem("orders", JSON.stringify([...orders, orderState]));
     }
   }
 
+  function onUploadProduct(e) {
+    e.preventDefault();
+    fileInputProduct.current.click();
+  }
+
+  function onUploadGift1(e) {
+    e.preventDefault();
+    fileInputGift1.current.click();
+  }
+
+  function onUploadGift2(e) {
+    e.preventDefault();
+    fileInputGift2.current.click();
+  }
+  const handleChangeProduct = (event) => {
+    const fileUploaded = event.target.files[0];
+    setOrderState({ ...orderState, fileInputProduct: fileUploaded });
+  };
+
+  const handleChangeGift1 = (event) => {
+    const fileUploaded = event.target.files[0];
+    setOrderState({ ...orderState, fileInputGift1: fileUploaded });
+  };
+
+  const handleChangeGift2 = (event) => {
+    const fileUploaded = event.target.files[0];
+    setOrderState({ ...orderState, fileInputGift2: fileUploaded });
+  };
   // React.useEffect(() => {
   //   if (myState !== undefined) {
   //     return;
@@ -277,39 +322,27 @@ function OrderForm() {
                   <GridItem xs={12} sm={12} md={6}>
                     <TextInput
                       labelText="Magaza"
-                      id="company"
-                      value={orderState.company}
+                      id="store"
+                      value={userData.store}
                       formControlProps={{
                         fullWidth: true,
                       }}
                       inputProps={{
                         disabled: true,
                       }}
-                      onChange={(e) =>
-                        setOrderState({
-                          ...orderState,
-                          company: e.target.value,
-                        })
-                      }
                     />
                   </GridItem>
                   <GridItem xs={12} sm={12} md={6}>
                     <TextInput
                       labelText="Yönetici"
                       id="username"
-                      value={orderState.username}
+                      value={userData.username}
                       formControlProps={{
                         fullWidth: true,
                       }}
                       inputProps={{
                         disabled: true,
                       }}
-                      onChange={(e) =>
-                        setOrderState({
-                          ...orderState,
-                          username: e.target.value,
-                        })
-                      }
                     />
                   </GridItem>
                 </GridContainer>
@@ -370,6 +403,28 @@ function OrderForm() {
                         })
                       }
                     />
+                  </GridItem>
+                  <GridItem md={1} style={{ marginTop: 36 }}>
+                    <input
+                      id={`imageProduct`}
+                      ref={fileInputProduct}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleChangeProduct}
+                      style={{ display: "none" }}
+                    />
+                    <MButton
+                      onClick={(e) => onUploadProduct(e)}
+                      variant="contained"
+                      color="inherit"
+                      size="small"
+                      type="file"
+                    >
+                      <FileDownload fontSize="small" />
+                    </MButton>
+                    {/* <Tooltip title={"Resim ekle"}>
+                     
+                    </Tooltip> */}
                   </GridItem>
                 </GridContainer>
 
@@ -465,7 +520,7 @@ function OrderForm() {
                     />
                   </GridItem>
                   <Typography style={{ marinLeft: 12, marginTop: 46 }}>
-                    Hediye1 Ölcü:{" "}
+                    Ölcü:{" "}
                   </Typography>
                   <GridItem xs={12} sm={6} md={2}>
                     <TextForm
@@ -502,6 +557,28 @@ function OrderForm() {
                       }
                     />
                   </GridItem>
+                  <GridItem md={1} style={{ marginTop: 36 }}>
+                    <input
+                      id={`imageGift1`}
+                      ref={fileInputGift1}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleChangeGift1}
+                      style={{ display: "none" }}
+                    />
+                    <MButton
+                      onClick={(e) => onUploadGift1(e)}
+                      variant="contained"
+                      color="inherit"
+                      size="small"
+                      type="file"
+                    >
+                      <FileDownload fontSize="small" />
+                    </MButton>
+                    {/* <Tooltip title={"Resim ekle"}>
+                     
+                    </Tooltip> */}
+                  </GridItem>
                 </GridContainer>
 
                 <GridContainer>
@@ -518,7 +595,7 @@ function OrderForm() {
                     />
                   </GridItem>
                   <Typography style={{ marinLeft: 12, marginTop: 46 }}>
-                    Hediye2 Ölcü:{" "}
+                    Ölcü:{" "}
                   </Typography>
                   <GridItem xs={12} sm={6} md={2}>
                     <TextForm
@@ -555,6 +632,28 @@ function OrderForm() {
                       }
                     />
                   </GridItem>
+                  <GridItem md={1} style={{ marginTop: 36 }}>
+                    <input
+                      id={`imageGift2`}
+                      ref={fileInputGift2}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleChangeGift2}
+                      style={{ display: "none" }}
+                    />
+                    <MButton
+                      onClick={(e) => onUploadGift2(e)}
+                      variant="contained"
+                      color="inherit"
+                      size="small"
+                      type="file"
+                    >
+                      <FileDownload fontSize="small" />
+                    </MButton>
+                    {/* <Tooltip title={"Resim ekle"}>
+                     
+                    </Tooltip> */}
+                  </GridItem>
                 </GridContainer>
 
                 <GridContainer>
@@ -563,6 +662,7 @@ function OrderForm() {
                       type={"number"}
                       label="Maliyet"
                       id="cost"
+                      disabled
                       fullWidth
                       onChange={(e) =>
                         setOrderState({ ...orderState, cost: e.target.value })
@@ -574,6 +674,7 @@ function OrderForm() {
                       type={"number"}
                       label="Paketleme Maliyeti"
                       id="packagingCost"
+                      disabled
                       fullWidth
                       onChange={(e) =>
                         setOrderState({
@@ -588,6 +689,7 @@ function OrderForm() {
                       type={"number"}
                       label="Kargolama Maliyeti"
                       id="shippingCost"
+                      disabled
                       fullWidth
                       onChange={(e) =>
                         setOrderState({
@@ -629,7 +731,7 @@ function OrderForm() {
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
                     <InputLabel style={{ color: "#AAAAAA", marginTop: 48 }}>
-                      Dosya Ekle
+                      Belge Ekle
                     </InputLabel>
                     <FileUpload
                       id={"file"}

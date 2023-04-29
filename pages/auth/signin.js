@@ -130,11 +130,11 @@ export default function SignIn() {
                 })
               }
             />
-            <FormControlLabel
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Beni hatirla"
               style={{ marginTop: 12, marginLeft: 0 }}
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth

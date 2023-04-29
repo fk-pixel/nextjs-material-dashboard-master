@@ -1,24 +1,14 @@
 import * as React from "react";
-import { useRouter, Router } from "next/router";
 
-import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
-import { Button, Box, Tooltip, Avatar, Chip } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
+import { Button, Box, Tooltip, Avatar } from "@mui/material";
 import FileUpload from "@mui/icons-material/FileUpload";
 import Save from "@mui/icons-material/Save";
 import Add from "@mui/icons-material/Add";
 import Delete from "@mui/icons-material/Delete";
 import AutocompleteEditCell from "../Autocomplete/AutocompleteEditCell.js";
-import moment from "moment";
 
-import {
-  randomAddress,
-  randomCreatedDate,
-  randomInt,
-  randomQuantity,
-  randomTraderName,
-  randomUpdatedDate,
-  randomUserName,
-} from "@mui/x-data-grid-generator";
+import { randomTraderName } from "@mui/x-data-grid-generator";
 import {
   PANELTYPE_OPTIONS,
   PRODUCTMAINTYPE_OPTIONS,
@@ -67,6 +57,7 @@ export default function BasicEditingGrid(props) {
       store: row.store,
       username: row.username,
       product: row.product,
+      productFile: row.productFile,
       productSize: row.size,
       productSizeWidth: null,
       productSizeHeight: null,
@@ -74,16 +65,19 @@ export default function BasicEditingGrid(props) {
       productSubType: row.productSubType,
       productCargoType: row.productCargoType,
       gift1: row.gift,
+      gift1File: row.gift1File,
       gift1Size: row.giftSize,
       gift1SizeWidth: null,
       gift1SizeHeight: null,
       gift2: row.gift,
+      gift2File: row.gift2File,
       gift2Size: row.giftSize,
       gift2SizeWidth: null,
       gift2SizeHeight: null,
       cost: row.cost,
       packagingCost: row.packagingCost,
       shippingCost: row.shippingCost,
+      shippingLabel: row.shippingLabel,
       description: row.description,
       file: null,
       status: row.status,
@@ -199,8 +193,8 @@ export default function BasicEditingGrid(props) {
     {
       field: "productSize",
       headerName: "Ürün Ölcüsü",
-      width: 70,
-      type: "number",
+      width: 120,
+      // type: "number",
       editable: true,
     },
     {
@@ -254,7 +248,7 @@ export default function BasicEditingGrid(props) {
     {
       field: "productCargoType",
       headerName: "Ürün Kargo Tipi",
-      // width: 100,
+      width: 120,
       editable: true,
       renderEditCell: (params) => {
         return (
@@ -280,8 +274,8 @@ export default function BasicEditingGrid(props) {
     {
       field: "gift1Size",
       headerName: "Hediye Ürün1 Ölcü",
-      width: 70,
-      type: "number",
+      width: 140,
+      // type: "number",
       editable: true,
     },
     {
@@ -293,8 +287,8 @@ export default function BasicEditingGrid(props) {
     {
       field: "gift2Size",
       headerName: "Hediye Ürün2 Ölcü",
-      width: 70,
-      type: "number",
+      width: 140,
+      // type: "number",
       editable: true,
     },
     { field: "cost", headerName: "Maliyet", type: "number", editable: true },
@@ -307,7 +301,15 @@ export default function BasicEditingGrid(props) {
     {
       field: "shippingCost",
       headerName: "Kargo Maliyeti",
+      width: 120,
       type: "number",
+      editable: true,
+    },
+    {
+      field: "shippingLabel",
+      headerName: "Kargo Etiketi",
+      width: 100,
+      type: "link",
       editable: true,
     },
     {
@@ -472,7 +474,7 @@ export function getDataWithAvatar(data) {
   return;
 }
 
-const STATUS_OPTIONS = [
+export const STATUS_OPTIONS = [
   { id: "canceledAfterProduction", label: "🔴 Üretimden sonra iptal edildi" },
   { id: "canceledBeforeProduction", label: "🟠 Üretimden önce iptal edildi" },
   { id: "sentToProduction", label: "🟡 Üretime gönderildi" },
