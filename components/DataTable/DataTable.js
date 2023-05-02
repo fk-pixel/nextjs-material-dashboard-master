@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { DataGrid } from "@mui/x-data-grid";
 import { Button, Box, Tooltip, Avatar } from "@mui/material";
-import FileUpload from "@mui/icons-material/FileUpload";
+import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 import Save from "@mui/icons-material/Save";
 import Add from "@mui/icons-material/Add";
 import Delete from "@mui/icons-material/Delete";
@@ -41,14 +41,9 @@ export default function BasicEditingGrid(props) {
   const onSave = (e, row) => {
     e.stopPropagation();
 
-    // const editedCellIndex = newData.indexOf(
-    //   newData.find((x) => x.id === row.id) || newData[newData.length]
-    // );
-    // newData[editedCellIndex] = [...newData[editedCellIndex], row];
+    // blob to img component
+    // <img className="blob-to-image" src={"data:image/png;base64," + photoBlob}></img>
 
-    // if (editedCellIndex !== -1) {
-    // setChartConfigurations([...chartConfigurations]);
-    // }
     const notEditedData = newData.filter((x) => x.id !== row.id);
 
     const editedData = {
@@ -77,7 +72,7 @@ export default function BasicEditingGrid(props) {
       cost: row.cost,
       packagingCost: row.packagingCost,
       shippingCost: row.shippingCost,
-      shippingLabel: row.shippingLabel,
+      cargoLabel: row.cargoLabel,
       description: row.description,
       file: null,
       status: row.status,
@@ -103,9 +98,6 @@ export default function BasicEditingGrid(props) {
 
     onChangeDataTable(afterRemoveData);
   };
-
-  // const user = JSON.parse(localStorage.getItem("userData"));
-  // const userData = localStorage.getItem("userData");
 
   function getChipProps(params) {
     if (params.value === "RED") {
@@ -164,13 +156,14 @@ export default function BasicEditingGrid(props) {
 
   const columns = [
     { field: "id", headerName: "ID", width: 50, editable: false },
+    //TODO: createdBy a göre avatarin username i görülsün
     {
       field: "avatar",
       headerName: "",
       width: 60,
       renderCell: (params) => {
         return (
-          <Tooltip title={"Kullanici"}>
+          <Tooltip title={`Kaydi Olusturan: ${params.createdBy}`}>
             <Avatar sx={{ bgcolor: "warning.main" }} alt="Remy Sharp">
               {params.value}
             </Avatar>
@@ -178,12 +171,12 @@ export default function BasicEditingGrid(props) {
         );
       },
     },
-    {
-      field: "store",
-      headerName: "Magaza",
-      // width: 100,
-      editable: true,
-    },
+    // {
+    //   field: "store",
+    //   headerName: "Magaza",
+    //   // width: 100,
+    //   editable: true,
+    // },
     {
       field: "product",
       headerName: "Ürün",
@@ -306,7 +299,7 @@ export default function BasicEditingGrid(props) {
       editable: true,
     },
     {
-      field: "shippingLabel",
+      field: "cargoLabel",
       headerName: "Kargo Etiketi",
       width: 100,
       type: "link",
@@ -354,26 +347,27 @@ export default function BasicEditingGrid(props) {
       valueGetter: ({ value }) => new Date(value),
       editable: false,
     },
-    {
-      field: "createdBy",
-      headerName: "Olusturan",
-      // width: 300,
-      editable: true,
-    },
+    // {
+    //   field: "createdBy",
+    //   headerName: "Olusturan",
+    //   // width: 300,
+    //   editable: true,
+    // },
     {
       field: "upload",
       headerName: "",
-      width: 70,
+      width: 90,
       renderCell: (params) => {
         return (
-          <Tooltip title={"Belge ekle"}>
+          <Tooltip title={"Mail gönder"}>
             <Button
               onClick={(e) => onUpload(e, params.row)}
               variant="contained"
               color="primary"
               size="small"
+              style={{ backgroundColor: "#ff9800" }}
             >
-              <FileUpload fontSize="small" />
+              <ForwardToInboxIcon fontSize="small" />
             </Button>
           </Tooltip>
         );
@@ -382,7 +376,7 @@ export default function BasicEditingGrid(props) {
     {
       field: "save",
       headerName: "",
-      width: 70,
+      width: 90,
       renderCell: (params) => {
         return (
           <Tooltip title={"Siparisi kaydet"}>
@@ -401,7 +395,7 @@ export default function BasicEditingGrid(props) {
     {
       field: "delete",
       headerName: "",
-      width: 70,
+      width: 90,
       renderCell: (params) => {
         return (
           <Tooltip title={"Siparisi sil"}>
@@ -457,11 +451,11 @@ export function getDataWithAvatar(data) {
     const newData = [];
 
     for (const i of data) {
-      const firstLetter = i.username?.split(" ")[0][0];
+      const firstLetter = i.createdBy?.split(" ")[0][0];
 
       const secondLetter =
-        i.username?.split(" ")[1] !== undefined
-          ? i.username?.split(" ")[1][0]
+        i.createdBy?.split(" ")[1] !== undefined
+          ? i.createdBy?.split(" ")[1][0]
           : "";
 
       const shortcut = firstLetter + secondLetter;

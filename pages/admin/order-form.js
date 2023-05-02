@@ -1,15 +1,14 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-// @material-ui/core components
+import { useForm } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
-// layout for this page
+
 import Admin from "layouts/Admin.js";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import TextInput from "components/TextInput/TextInput.js";
-// import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
@@ -17,9 +16,18 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import { FileUpload } from "components/FileUpload/FileUpload.js";
 // import AutocompleteEditCell from "components/AutocompleteEditCell/AutocompleteEditCell.js";
-import { Autocomplete, FormControl, TextField, Tooltip } from "@mui/material";
-import FileDownload from "@mui/icons-material/FileDownload";
+import {
+  Autocomplete,
+  FormControl,
+  TextField,
+  Tooltip,
+  Collapse,
+  IconButton,
+} from "@mui/material";
 import Button from "components/CustomButtons/Button.js";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Delete from "@mui/icons-material/Delete";
 
 import { Button as MButton, Box } from "@mui/material";
 import avatar from "assets/img/faces/marc.jpg";
@@ -28,6 +36,7 @@ import TextForm from "../../components/TextForm/TextForm";
 import { uniqueId } from "lodash";
 import { isDeepEqual } from "@mui/x-data-grid/internals";
 import { Typography } from "@material-ui/core";
+import { Upload } from "@mui/icons-material";
 
 const styles = {
   cardCategoryWhite: {
@@ -115,17 +124,19 @@ function OrderForm() {
 
   const classes = useStyles();
 
+  const { reset } = useForm(); //TODO: Form validation a basla
+
   const fileInputProduct = React.useRef(null);
   const fileInputGift1 = React.useRef(null);
   const fileInputGift2 = React.useRef(null);
 
   const [orderState, setOrderState] = React.useState({
     id: uuidv4(),
-    number: uniqueId(),
-    store: "",
-    username: "",
+    // number: uniqueId(),
+    // store: "",
+    // username: "",
     product: "",
-    productFile: "",
+    productFile: null,
     productSize: "",
     productSizeWidth: null,
     productSizeHeight: null,
@@ -133,12 +144,12 @@ function OrderForm() {
     productSubType: "",
     productCargoType: "",
     gift1: "",
-    gift1File: "",
+    gift1File: null,
     gift1Size: "",
     gift1SizeWidth: null,
     gift1SizeHeight: null,
     gift2: "",
-    gift2File: "",
+    gift2File: null,
     gift2Size: "",
     gift2SizeWidth: null,
     gift2SizeHeight: null,
@@ -146,71 +157,73 @@ function OrderForm() {
     packagingCost: null,
     shippingCost: null,
     description: "",
-    file: null,
+    cargoLabel: null,
     status: null,
     price: null,
     createdDate: new Date(),
     createdBy: "",
   });
-
-  function getUserData() {
-    const ISSERVER = typeof window === "undefined";
-
-    return !ISSERVER ? JSON.parse(localStorage.getItem("userData")) : {};
-  }
-
-  const userData = getUserData();
+  const [openProductFile, setOpenProductFile] = React.useState(false);
+  const [openGift1File, setOpenGift1File] = React.useState(false);
+  const [openGift2File, setOpenGift2File] = React.useState(false);
+  const [isHoverProduct, setIsHoverProduct] = React.useState(false);
+  const [isHoverGift1, setIsHoverGift1] = React.useState(false);
+  const [isHoverGift2, setIsHoverGift2] = React.useState(false);
 
   function handleSubmit(e) {
-    // e.preventDefault();
-    if (orderState !== undefined) {
-      var orders = JSON.parse(localStorage.getItem("orders"));
+    const userData = JSON.parse(localStorage.getItem("userData"));
 
-      if (orders === null) {
-        orders = [];
-      } else {
-        orders;
-      }
+    let orders = JSON.parse(localStorage.getItem("orders"));
 
-      const {
-        productSizeWidth,
-        productSizeHeight,
-        gift1SizeWidth,
-        gift1SizeHeight,
-        gift2SizeWidth,
-        gift2SizeHeight,
-        id,
-        username,
-        store,
-        createdBy,
-        ...rest
-      } = orderState;
-
-      const newID =
-        orders.find((x) => x.id === id) !== undefined ? uuidv4() : id;
-
-      const orderState = {
-        ...rest,
-        id: newID,
-        productSize:
-          productSizeWidth !== null || productSizeHeight !== null
-            ? productSizeWidth + "*" + productSizeHeight
-            : null,
-        gift1Size:
-          gift1SizeWidth !== null || gift1SizeHeight !== null
-            ? gift1SizeWidth + "*" + gift1SizeHeight
-            : null,
-        gift2Size:
-          gift2SizeWidth !== null || gift2SizeHeight !== null
-            ? gift2SizeWidth + "*" + gift2SizeHeight
-            : null,
-        username: JSON.parse(localStorage.getItem("userData")).username,
-        store: JSON.parse(localStorage.getItem("userData")).store,
-        createdBy: JSON.parse(localStorage.getItem("userData")).username,
-      };
-
-      localStorage.setItem("orders", JSON.stringify([...orders, orderState]));
+    if (orders === null) {
+      orders = [];
+    } else {
+      orders;
     }
+
+    const newID =
+      orders.find((x) => x.id === orderState.id) !== undefined
+        ? uuidv4()
+        : orderState.id;
+
+    const newOrderState = {
+      id: newID,
+      product: orderState.product,
+      productFile: orderState.productFile,
+      productSize:
+        orderState.productSizeWidth !== null ||
+        orderState.productSizeHeight !== null
+          ? orderState.productSizeWidth + "*" + orderState.productSizeHeight
+          : null,
+      productMainType: orderState.productMainType,
+      productSubType: orderState.productSubType,
+      productCargoType: orderState.productCargoType,
+      gift1: orderState.gift1,
+      gift1File: orderState.gift1File,
+      gift1Size:
+        orderState.gift1SizeWidth !== null ||
+        orderState.gift1SizeHeight !== null
+          ? orderState.gift1SizeWidth + "*" + orderState.gift1SizeHeight
+          : null,
+      gift2: orderState.gift2,
+      gift2File: orderState.gift2File,
+      gift2Size:
+        orderState.gift2SizeWidth !== null ||
+        orderState.gift2SizeHeight !== null
+          ? orderState.gift2SizeWidth + "*" + orderState.gift2SizeHeight
+          : null,
+      createdBy: userData.username,
+      cost: null,
+      packagingCost: null,
+      shippingCost: null,
+      description: orderState.description,
+      cargoLabel: orderState.cargoLabel,
+      status: null,
+      price: orderState.price,
+      createdDate: new Date(),
+    };
+
+    localStorage.setItem("orders", JSON.stringify([...orders, newOrderState]));
   }
 
   function onUploadProduct(e) {
@@ -227,87 +240,88 @@ function OrderForm() {
     e.preventDefault();
     fileInputGift2.current.click();
   }
+
   const handleChangeProduct = (event) => {
-    const fileUploaded = event.target.files[0];
-    setOrderState({ ...orderState, fileInputProduct: fileUploaded });
+    // const fileReader = new FileReader();
+    // fileReader.readAsText(event.target.files[0]);
+    // fileReader.onload = (e) => {
+    //   const result = e.target.result;
+    //   const typeResult = typeof result;
+    //   const content = JSON.parse(result);
+    //   setOrderState({ productFile: content, ...orderState });
+    // };
+    setOrderState({
+      ...orderState,
+      productFile: URL.createObjectURL(event.target.files[0]),
+    });
   };
 
   const handleChangeGift1 = (event) => {
-    const fileUploaded = event.target.files[0];
-    setOrderState({ ...orderState, fileInputGift1: fileUploaded });
+    setOrderState({
+      ...orderState,
+      gift1File: URL.createObjectURL(event.target.files[0]),
+    });
   };
 
   const handleChangeGift2 = (event) => {
-    const fileUploaded = event.target.files[0];
-    setOrderState({ ...orderState, fileInputGift2: fileUploaded });
+    setOrderState({
+      ...orderState,
+      gift2File: URL.createObjectURL(event.target.files[0]),
+    });
   };
-  // React.useEffect(() => {
-  //   if (myState !== undefined) {
-  //     return;
-  //   }
-  // }, [myState]);
 
-  // console.log("mystate", myState);
+  const handleMouseEnter = (image) => {
+    if (image === "product") {
+      setIsHoverProduct(true);
+    }
 
-  // function removeForm() {
-  //   const { company, username } = myState;
+    if (image === "gift1") {
+      setIsHoverGift1(true);
+    }
 
-  //   setMyState({
-  //     product: null,
-  //     size: null,
-  //     productMainType: null,
-  //     productSubType: null,
-  //     productCargoType: null,
-  //     gift: null,
-  //     cost: null,
-  //     packagingCost: null,
-  //     shippingCost: null,
-  //     description: null,
-  //     file: null,
-  //     company,
-  //     username,
-  //   });
+    if (image === "gift2") {
+      setIsHoverGift2(true);
+    }
+  };
 
-  //   //console.log(myState);
-  // }
+  const handleMouseLeave = (image) => {
+    if (image === "product") {
+      setIsHoverProduct(false);
+    }
 
-  // const removeForm2 = React.useCallback(() => {
-  //   const { company, username } = myState;
+    if (image === "gift1") {
+      setIsHoverGift1(false);
+    }
 
-  //   setMyState({
-  //     product: "",
-  //     size: "",
-  //     productMainType: "",
-  //     productSubType: "",
-  //     productCargoType: "",
-  //     gift: "",
-  //     cost: null,
-  //     packagingCost: null,
-  //     shippingCost: null,
-  //     description: "",
-  //     file: null,
-  //     company,
-  //     username,
-  //     price,
-  //   });
-  // }, []);
+    if (image === "gift2") {
+      setIsHoverGift2(false);
+    }
+  };
 
-  // React.useEffect(() => {
-  //   if (removeForm2) {
-  //     myState;
-  //   }
-  // }, []);
+  const removeImage = (image) => {
+    if (image === "product") {
+      setOrderState({ ...orderState, productFile: null });
+    }
 
-  //console.log(myState);
+    if (image === "gift1") {
+      setOrderState({ ...orderState, gift1File: null });
+    }
 
-  // function handleChange(event) {
-  //   event.preventDefault();
-  //   //console.log(myState);
-  // }
+    if (image === "gift2") {
+      setOrderState({ ...orderState, gift2File: null });
+    }
+  };
+
+  const removeForm = (e) => {
+    e.preventDefault();
+    setTriggerReset(true);
+    // e.target.reset();
+    document.getElementById("form").reset();
+  };
 
   return (
     <div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} id={"form"}>
         <GridContainer>
           <GridItem xs={12} sm={12} md={12}>
             <Card>
@@ -318,35 +332,6 @@ function OrderForm() {
                 </p>
               </CardHeader>
               <CardBody>
-                <GridContainer>
-                  <GridItem xs={12} sm={12} md={6}>
-                    <TextInput
-                      labelText="Magaza"
-                      id="store"
-                      value={userData.store}
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                      inputProps={{
-                        disabled: true,
-                      }}
-                    />
-                  </GridItem>
-                  <GridItem xs={12} sm={12} md={6}>
-                    <TextInput
-                      labelText="Kullanici"
-                      id="username"
-                      value={userData.username}
-                      formControlProps={{
-                        fullWidth: true,
-                      }}
-                      inputProps={{
-                        disabled: true,
-                      }}
-                    />
-                  </GridItem>
-                </GridContainer>
-
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={6}>
                     <TextForm
@@ -364,11 +349,54 @@ function OrderForm() {
                         })
                       }
                     />
+                    {orderState.productFile !== null && (
+                      <>
+                        <IconButton
+                          aria-label="expand row"
+                          size="small"
+                          onClick={() => setOpenProductFile(!openProductFile)}
+                        >
+                          {openProductFile ? (
+                            <KeyboardArrowUpIcon />
+                          ) : (
+                            <>
+                              <KeyboardArrowDownIcon />
+                              <Typography
+                                style={{ marginLeft: 12, marginTop: 0 }}
+                              >
+                                {"Resmi göster"}
+                              </Typography>{" "}
+                            </>
+                          )}
+                        </IconButton>
+                        <Collapse
+                          in={openProductFile}
+                          timeout="auto"
+                          unmountOnExit
+                        >
+                          <Box display={"flex"}>
+                            <img src={orderState.productFile} />
+                            <Tooltip title={"Resmi sil"}>
+                              <Delete
+                                fontSize="small"
+                                onMouseEnter={() => handleMouseEnter("product")}
+                                onMouseLeave={() => handleMouseLeave("product")}
+                                style={{
+                                  marginLeft: 12,
+                                  alignSelf: "end",
+                                  color: isHoverProduct ? "red" : "black",
+                                }}
+                                onClick={() => removeImage("product")}
+                              />
+                            </Tooltip>
+                          </Box>
+                        </Collapse>
+                      </>
+                    )}
                   </GridItem>
-                  <Typography style={{ marinLeft: 12, marginTop: 46 }}>
-                    Ölcü:{" "}
+                  <Typography style={{ marginLeft: 12, marginTop: 46 }}>
+                    {"Ölcü:"}
                   </Typography>
-                  {/* </Box> */}
                   <GridItem xs={12} sm={6} md={2}>
                     <TextForm
                       type="number"
@@ -406,7 +434,7 @@ function OrderForm() {
                   </GridItem>
                   <GridItem md={1} style={{ marginTop: 36 }}>
                     <input
-                      id={`imageProduct`}
+                      id={`productFile`}
                       ref={fileInputProduct}
                       type="file"
                       accept="image/*"
@@ -420,11 +448,8 @@ function OrderForm() {
                       size="small"
                       type="file"
                     >
-                      <FileDownload fontSize="small" />
+                      <Upload fontSize="small" />
                     </MButton>
-                    {/* <Tooltip title={"Resim ekle"}>
-                     
-                    </Tooltip> */}
                   </GridItem>
                 </GridContainer>
 
@@ -518,9 +543,53 @@ function OrderForm() {
                         setOrderState({ ...orderState, gift1: e.target.value })
                       }
                     />
+                    {orderState.gift1File !== null && (
+                      <>
+                        <IconButton
+                          aria-label="expand row"
+                          size="small"
+                          onClick={() => setOpenGift1File(!openGift1File)}
+                        >
+                          {openGift1File ? (
+                            <KeyboardArrowUpIcon />
+                          ) : (
+                            <>
+                              <KeyboardArrowDownIcon />
+                              <Typography
+                                style={{ marginLeft: 12, marginTop: 0 }}
+                              >
+                                {"Resmi göster"}
+                              </Typography>{" "}
+                            </>
+                          )}
+                        </IconButton>
+                        <Collapse
+                          in={openGift1File}
+                          timeout="auto"
+                          unmountOnExit
+                        >
+                          <Box display={"flex"}>
+                            <img src={orderState.gift1File} />
+                            <Tooltip title={"Resmi sil"}>
+                              <Delete
+                                fontSize="small"
+                                onMouseEnter={() => handleMouseEnter("gift1")}
+                                onMouseLeave={() => handleMouseLeave("gift1")}
+                                style={{
+                                  marginLeft: 12,
+                                  alignSelf: "end",
+                                  color: isHoverGift1 ? "red" : "black",
+                                }}
+                                onClick={() => removeImage("gift1")}
+                              />
+                            </Tooltip>
+                          </Box>
+                        </Collapse>
+                      </>
+                    )}
                   </GridItem>
-                  <Typography style={{ marinLeft: 12, marginTop: 46 }}>
-                    Ölcü:{" "}
+                  <Typography style={{ marginLeft: 12, marginTop: 46 }}>
+                    {"Ölcü:"}
                   </Typography>
                   <GridItem xs={12} sm={6} md={2}>
                     <TextForm
@@ -559,7 +628,7 @@ function OrderForm() {
                   </GridItem>
                   <GridItem md={1} style={{ marginTop: 36 }}>
                     <input
-                      id={`imageGift1`}
+                      id={`gift1File`}
                       ref={fileInputGift1}
                       type="file"
                       accept="image/*"
@@ -573,7 +642,7 @@ function OrderForm() {
                       size="small"
                       type="file"
                     >
-                      <FileDownload fontSize="small" />
+                      <Upload fontSize="small" />
                     </MButton>
                     {/* <Tooltip title={"Resim ekle"}>
                      
@@ -582,7 +651,6 @@ function OrderForm() {
                 </GridContainer>
 
                 <GridContainer>
-                  {" "}
                   <GridItem xs={12} sm={12} md={6}>
                     <TextForm
                       type={"text"}
@@ -593,9 +661,53 @@ function OrderForm() {
                         setOrderState({ ...orderState, gift2: e.target.value })
                       }
                     />
+                    {orderState.gift2File !== null && (
+                      <>
+                        <IconButton
+                          aria-label="expand row"
+                          size="small"
+                          onClick={() => setOpenGift2File(!openGift2File)}
+                        >
+                          {openGift2File ? (
+                            <KeyboardArrowUpIcon />
+                          ) : (
+                            <>
+                              <KeyboardArrowDownIcon />
+                              <Typography
+                                style={{ marginLeft: 12, marginTop: 0 }}
+                              >
+                                {"Resmi göster"}
+                              </Typography>{" "}
+                            </>
+                          )}
+                        </IconButton>
+                        <Collapse
+                          in={openGift2File}
+                          timeout="auto"
+                          unmountOnExit
+                        >
+                          <Box display={"flex"}>
+                            <img src={orderState.gift2File} />
+                            <Tooltip title={"Resmi sil"}>
+                              <Delete
+                                fontSize="small"
+                                onMouseEnter={() => handleMouseEnter("gift2")}
+                                onMouseLeave={() => handleMouseLeave("gift2")}
+                                style={{
+                                  marginLeft: 12,
+                                  alignSelf: "end",
+                                  color: isHoverGift2 ? "red" : "black",
+                                }}
+                                onClick={() => removeImage("gift2")}
+                              />
+                            </Tooltip>
+                          </Box>
+                        </Collapse>
+                      </>
+                    )}
                   </GridItem>
-                  <Typography style={{ marinLeft: 12, marginTop: 46 }}>
-                    Ölcü:{" "}
+                  <Typography style={{ marginLeft: 12, marginTop: 46 }}>
+                    {"Ölcü:"}
                   </Typography>
                   <GridItem xs={12} sm={6} md={2}>
                     <TextForm
@@ -634,7 +746,7 @@ function OrderForm() {
                   </GridItem>
                   <GridItem md={1} style={{ marginTop: 36 }}>
                     <input
-                      id={`imageGift2`}
+                      id={`gift2File`}
                       ref={fileInputGift2}
                       type="file"
                       accept="image/*"
@@ -648,11 +760,8 @@ function OrderForm() {
                       size="small"
                       type="file"
                     >
-                      <FileDownload fontSize="small" />
+                      <Upload fontSize="small" />
                     </MButton>
-                    {/* <Tooltip title={"Resim ekle"}>
-                     
-                    </Tooltip> */}
                   </GridItem>
                 </GridContainer>
 
@@ -731,12 +840,15 @@ function OrderForm() {
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={12}>
                     <InputLabel style={{ color: "#AAAAAA", marginTop: 48 }}>
-                      Belge Ekle
+                      Kargo Etiketi Ekle
                     </InputLabel>
                     <FileUpload
-                      id={"file"}
+                      id={"cargoLabel"}
                       onChange={(e) =>
-                        setOrderState({ ...orderState, file: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          cargoLabel: e.target.value,
+                        })
                       }
                       {...fileUploadProp}
                     />
@@ -748,9 +860,10 @@ function OrderForm() {
                   Kaydet
                 </Button>
                 <Button
+                  type="submit"
                   variant="contained"
                   color="inherit"
-                  // onClick={removeForm2}
+                  onClick={(e) => removeForm(e)}
                 >
                   Formu Yenile
                 </Button>
