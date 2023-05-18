@@ -1,13 +1,34 @@
 import * as React from "react";
 
 import { DataGrid } from "@mui/x-data-grid";
-import { Button, Box, Tooltip, Avatar } from "@mui/material";
+import {
+  Button,
+  Box,
+  Tooltip,
+  Avatar,
+  Drawer,
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 import Save from "@mui/icons-material/Save";
 import Add from "@mui/icons-material/Add";
 import Delete from "@mui/icons-material/Delete";
-import AutocompleteEditCell from "../Autocomplete/AutocompleteEditCell.js";
+import LinkedCameraIcon from "@mui/icons-material/LinkedCamera";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
 
+import AutocompleteEditCell from "../Autocomplete/AutocompleteEditCell.js";
+import {
+  makeStyles,
+  createMuiTheme,
+  ThemeProvider,
+} from "@material-ui/core/styles";
 import { randomTraderName } from "@mui/x-data-grid-generator";
 import {
   PANELTYPE_OPTIONS,
@@ -15,19 +36,49 @@ import {
   ROLLTYPE_OPTIONS,
   SHIPPING_OPTIONS,
 } from "../../pages/admin/order-form.js";
+import { Card, CardContent, CardActions } from "@material-ui/core";
 
-let idCounter = 1;
-const createRandomRow = () => {
-  idCounter += 1;
-  return { id: idCounter };
-};
-
-// var getItems = JSON.parse(localStorage.getItem("orders"));
-// var getItems2 = window.localStorage.getItem("orders");
+// let idCounter = 1;
+// const createRandomRow = () => {
+//   idCounter += 1;
+//   return { id: idCounter };
+// };
 
 export default function BasicEditingGrid(props) {
   const { data, userData, onChangeDataTable } = props;
 
+  const [openImgDrawer, setOpenImgDrawer] = React.useState(false);
+  const theme = createMuiTheme({
+    overrides: {
+      // For label
+      MuiCard: {
+        root: {
+          "& .hidden-button": {
+            display: "none",
+          },
+          "&:hover .hidden-button": {
+            display: "flex",
+          },
+          ".MuiPaper-root": {
+            width: "275px",
+          },
+        },
+      },
+    },
+    a: { "& .MuiDrawer-paper": { width: "275px" } },
+  });
+
+  const useStyles = makeStyles({
+    root: {
+      minWidth: 275,
+    },
+    title: {
+      fontSize: 14,
+    },
+    paper: { "& .MuiDrawer-paper": { width: "275px" } },
+  });
+
+  const classes = useStyles();
   var newData = getDataWithAvatar(data);
 
   const onUpload = (e, row) => {
@@ -99,45 +150,45 @@ export default function BasicEditingGrid(props) {
     onChangeDataTable(afterRemoveData);
   };
 
-  function getChipProps(params) {
-    if (params.value === "RED") {
-      return {
-        icon: <WarningIcon style={{ fill: red[500] }} />,
-        label: params.value,
-        style: {
-          borderColor: red[500],
-        },
-      };
-    } else {
-      return {
-        icon: <CheckCircleIcon style={{ fill: blue[500] }} />,
-        label: params.value,
-        style: {
-          borderColor: blue[500],
-        },
-      };
-    }
-  }
+  // function getChipProps(params) {
+  //   if (params.value === "RED") {
+  //     return {
+  //       icon: <WarningIcon style={{ fill: red[500] }} />,
+  //       label: params.value,
+  //       style: {
+  //         borderColor: red[500],
+  //       },
+  //     };
+  //   } else {
+  //     return {
+  //       icon: <CheckCircleIcon style={{ fill: blue[500] }} />,
+  //       label: params.value,
+  //       style: {
+  //         borderColor: blue[500],
+  //       },
+  //     };
+  //   }
+  // }
 
-  function getOptionProps(params) {
-    if (params.value === "RED") {
-      return {
-        icon: <WarningIcon style={{ fill: red[500] }} />,
-        label: params.value,
-        style: {
-          borderColor: red[500],
-        },
-      };
-    } else {
-      return {
-        icon: <CheckCircleIcon style={{ fill: blue[500] }} />,
-        label: params.value,
-        style: {
-          borderColor: blue[500],
-        },
-      };
-    }
-  }
+  // function getOptionProps(params) {
+  //   if (params.value === "RED") {
+  //     return {
+  //       icon: <WarningIcon style={{ fill: red[500] }} />,
+  //       label: params.value,
+  //       style: {
+  //         borderColor: red[500],
+  //       },
+  //     };
+  //   } else {
+  //     return {
+  //       icon: <CheckCircleIcon style={{ fill: blue[500] }} />,
+  //       label: params.value,
+  //       style: {
+  //         borderColor: blue[500],
+  //       },
+  //     };
+  //   }
+  // }
 
   function getNewDataByUser() {
     return newData !== undefined
@@ -154,6 +205,41 @@ export default function BasicEditingGrid(props) {
         : newDataByUser
       : {};
 
+  //     const list = (anchor) => (
+  //   <Box
+  //     sx={{ width: 250 }}
+  //     role="presentation"
+  //     onClick={handleProductImg(false)}
+  //     onKeyDown={handleProductImg(false)}
+  //   >
+  //     <List>
+  //       {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
+  //         <ListItem key={text} disablePadding>
+  //           <ListItemButton>
+  //             <ListItemIcon>
+  //               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+  //             </ListItemIcon>
+  //             <ListItemText primary={text} />
+  //           </ListItemButton>
+  //         </ListItem>
+  //       ))}
+  //     </List>
+  //     <Divider />
+  //     <List>
+  //       {["All mail", "Trash", "Spam"].map((text, index) => (
+  //         <ListItem key={text} disablePadding>
+  //           <ListItemButton>
+  //             <ListItemIcon>
+  //               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+  //             </ListItemIcon>
+  //             <ListItemText primary={text} />
+  //           </ListItemButton>
+  //         </ListItem>
+  //       ))}
+  //     </List>
+  //   </Box>
+  // );
+
   const columns = [
     { field: "id", headerName: "ID", width: 50, editable: false },
     //TODO: createdBy a göre avatarin username i görülsün
@@ -163,7 +249,7 @@ export default function BasicEditingGrid(props) {
       width: 60,
       renderCell: (params) => {
         return (
-          <Tooltip title={`Kaydi Olusturan: ${params.createdBy}`}>
+          <Tooltip title={`Kaydi Olusturan: ${params.row.createdBy}`}>
             <Avatar sx={{ bgcolor: "warning.main" }} alt="Remy Sharp">
               {params.value}
             </Avatar>
@@ -182,6 +268,49 @@ export default function BasicEditingGrid(props) {
       headerName: "Ürün",
       width: 200,
       editable: true,
+      renderCell: (params) => {
+        return (
+          <>
+            <Box
+              width={200}
+              /* display={"flex"} */ style={{ justifyContent: "space-around" }}
+            >
+              <span
+              // style={{
+              //   whiteSpace: "nowrap",
+              //   overflow: "hidden",
+              //   textOverflow: "ellipsis",
+              // }}
+              >
+                {params.row.product}
+              </span>
+              {params.row.productFile && (
+                <>
+                  <Button
+                    onClick={() => setOpenImgDrawer(true)}
+                    color={"inherit"} /* style={{ marginLeft: 12 }} */
+                  >
+                    <LinkedCameraIcon />
+                  </Button>
+                  <Drawer
+                    className={classes.paper}
+                    style={{ width: "100px" }}
+                    anchor={"right"}
+                    open={openImgDrawer}
+                    onClose={() => setOpenImgDrawer(false)}
+                  >
+                    <Box>
+                      <img src={params.row.productFile} />
+                    </Box>
+                    <Typography>{params.row.product}</Typography>
+                    {/* {list("right")} */}
+                  </Drawer>
+                </>
+              )}
+            </Box>
+          </>
+        );
+      },
     },
     {
       field: "productSize",
@@ -466,6 +595,10 @@ export function getDataWithAvatar(data) {
   }
 
   return;
+}
+
+export function ImgDrawer(openImgDrawer) {
+  return <>{openImgDrawer && <Drawer key={"ImgDrawer"}></Drawer>}</>;
 }
 
 export const STATUS_OPTIONS = [

@@ -37,6 +37,23 @@ import { uniqueId } from "lodash";
 import { isDeepEqual } from "@mui/x-data-grid/internals";
 import { Typography } from "@material-ui/core";
 import { Upload } from "@mui/icons-material";
+import { createTheme } from "@mui/material/styles";
+
+// const tema = createTheme({
+//   status: {
+//     danger: "#e53e3e",
+//   },
+//   palette: {
+//     primary: {
+//       main: "#0971f1",
+//       darker: "#053e85",
+//     },
+//     neutral: {
+//       main: "#64748B",
+//       contrastText: "#fff",
+//     },
+//   },
+// });
 
 const styles = {
   cardCategoryWhite: {
@@ -444,7 +461,7 @@ function OrderForm() {
                     <MButton
                       onClick={(e) => onUploadProduct(e)}
                       variant="contained"
-                      color="inherit"
+                      color={"info"}
                       size="small"
                       type="file"
                     >
@@ -540,7 +557,10 @@ function OrderForm() {
                       id="gift1"
                       fullWidth
                       onChange={(e) =>
-                        setOrderState({ ...orderState, gift1: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          gift1: e.target.value,
+                        })
                       }
                     />
                     {orderState.gift1File !== null && (
@@ -658,7 +678,10 @@ function OrderForm() {
                       id="gift2"
                       fullWidth
                       onChange={(e) =>
-                        setOrderState({ ...orderState, gift2: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          gift2: e.target.value,
+                        })
                       }
                     />
                     {orderState.gift2File !== null && (
@@ -815,7 +838,10 @@ function OrderForm() {
                       id="price"
                       fullWidth
                       onChange={(e) =>
-                        setOrderState({ ...orderState, price: e.target.value })
+                        setOrderState({
+                          ...orderState,
+                          price: e.target.value,
+                        })
                       }
                     />
                   </GridItem>
@@ -859,18 +885,19 @@ function OrderForm() {
                 <Button variant="contained" color="primary" type="submit">
                   Kaydet
                 </Button>
-                <Button
+                {/* <Button
                   type="submit"
                   variant="contained"
-                  color="inherit"
+                  color="#AAAAAA"
                   onClick={(e) => removeForm(e)}
                 >
                   Formu Yenile
-                </Button>
+                </Button> */}
               </CardFooter>
             </Card>
           </GridItem>
         </GridContainer>
+        {/* </ThemeProvider> */}
       </form>
     </div>
   );
