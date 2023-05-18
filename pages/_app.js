@@ -20,12 +20,13 @@ import ReactDOM from "react-dom";
 import App from "next/app";
 import Head from "next/head";
 import Router from "next/router";
-// import { ThemeProvider } from "@mui/material/styles";
-// import theme from "../layouts/theme";
+// import { createRoot } from "react-dom/client";
 
 import PageChange from "components/PageChange/PageChange.js";
 
 import "assets/css/nextjs-material-dashboard.css?v=1.1.0";
+
+// const root = createRoot(document.getElementById("app"));
 
 Router.events.on("routeChangeStart", (url) => {
   console.log(`Loading: ${url}`);
@@ -37,10 +38,12 @@ Router.events.on("routeChangeStart", (url) => {
 });
 Router.events.on("routeChangeComplete", () => {
   ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
+  // root.unmount(document.getElementById("page-transition"));
   document.body.classList.remove("body-page-transition");
 });
 Router.events.on("routeChangeError", () => {
   ReactDOM.unmountComponentAtNode(document.getElementById("page-transition"));
+  // root.unmount(document.getElementById("page-transition"));
   document.body.classList.remove("body-page-transition");
 });
 
